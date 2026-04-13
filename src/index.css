@@ -1,0 +1,67 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+    body {
+        @apply bg-[#FDFDFD] text-slate-900 antialiased font-['Inter'] selection:bg-orange-100 overflow-x-hidden;
+        -webkit-tap-highlight-color: transparent;
+        scroll-behavior: smooth;
+    }
+
+    h1,
+    h2,
+    h3,
+    h4,
+    h5,
+    h6 {
+        @apply font-['Outfit'] tracking-tight;
+    }
+}
+
+@layer components {
+    .glass {
+        @apply bg-white/10 dark:bg-black/20 backdrop-blur-xl border border-white/10 dark:border-white/5;
+    }
+    
+    .premium-shadow {
+        box-shadow: 0 10px 40px -10px rgba(0, 0, 0, 0.5), 0 4px 20px -5px rgba(0, 0, 0, 0.3);
+    }
+
+    .shadow-premium {
+        box-shadow: 0 10px 40px -10px rgba(0, 0, 0, 0.05),
+            0 2px 20px -8px rgba(0, 0, 0, 0.03);
+    }
+
+    .shadow-glass {
+        box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.05),
+            0 10px 40px -10px rgba(0, 0, 0, 0.05);
+    }
+
+    .no-scrollbar::-webkit-scrollbar {
+        display: none;
+    }
+
+    .no-scrollbar {
+        -ms-overflow-style: none;
+        scrollbar-width: none;
+    }
+}
+
+/* Smooth active states for buttons */
+.btn-active:active {
+    transform: scale(0.95);
+}
+
+@keyframes bounce-subtle {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-3px); }
+}
+
+.animate-bounce-subtle {
+    animation: bounce-subtle 3s infinite ease-in-out;
+}
+
+.premium-glass {
+    @apply bg-white/80 dark:bg-zinc-900/80 backdrop-blur-md border border-white/20 dark:border-zinc-800/20 shadow-xl;
+}
