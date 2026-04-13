@@ -97,8 +97,9 @@ const Profile = () => {
     };
 
     if (!user) return (
-        <div className="flex flex-col items-center justify-center min-h-screen bg-zinc-50 dark:bg-[#0A0A0A]">
-            <div className="w-8 h-8 border-2 border-zinc-900 dark:border-white border-t-transparent rounded-full animate-spin"></div>
+        <div className="flex flex-col items-center justify-center min-h-screen bg-zinc-50 dark:bg-[#0A0A0A] gap-4">
+            <MobileLoader size={40} />
+            <p className="text-[10px] font-black uppercase tracking-[0.2em] text-zinc-400 animate-pulse">Syncing Profile...</p>
         </div>
     );
 
@@ -220,7 +221,7 @@ const Profile = () => {
                     
                     <div className="relative mb-4 group">
                         <div className="w-24 h-24 bg-zinc-100 dark:bg-zinc-800 rounded-full border-4 border-white dark:border-zinc-950 flex items-center justify-center shadow-xl group-hover:scale-105 transition-transform duration-500">
-                            <span className="text-3xl font-black text-zinc-900 dark:text-white italic">{user.name[0]}</span>
+                            <span className="text-3xl font-black text-zinc-900 dark:text-white italic">{user?.name ? user.name[0] : 'U'}</span>
                         </div>
                         <div className="absolute -bottom-1 -right-1 w-8 h-8 bg-emerald-500 rounded-full border-4 border-white dark:border-zinc-950 flex items-center justify-center text-white">
                             <CheckCircle2 size={14} strokeWidth={3} />
