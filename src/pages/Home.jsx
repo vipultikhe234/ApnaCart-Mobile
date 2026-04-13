@@ -57,6 +57,9 @@ const Home = () => {
         }
     });
 
+    const [selectedProduct, setSelectedProduct] = useState(null);
+    const [showVariantModal, setShowVariantModal] = useState(false);
+
     // Landing Banners State
     const [banners, setBanners] = useState([]);
     const [currentBannerIndex, setCurrentBannerIndex] = useState(0);
@@ -469,9 +472,9 @@ const Home = () => {
                         ) : (
                             curatedProducts.slice(0, 10).map((p, idx) => (
                                 <motion.div key={`curated-${p.id}`} layout initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }} exit={{ opacity: 0, scale: 0.95 }} transition={{ delay: idx * 0.05 }}>
-                                    <div className="block group cursor-pointer" onClick={() => navigate(`/product/${p.id}`)}>
-                                        <div className="aspect-square bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 rounded-3xl overflow-hidden mb-3 relative">
-                                            <img src={p.image_url} alt={p.name} className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" />
+                                    <div className="block group bg-white dark:bg-zinc-900/40 p-2 rounded-[32px] border border-zinc-100 dark:border-zinc-800 shadow-sm relative overflow-hidden">
+                                        <div className="aspect-square bg-white dark:bg-zinc-900 border border-zinc-100 dark:border-zinc-800 rounded-[28px] overflow-hidden mb-3 relative group-hover:shadow-xl transition-all">
+                                            <img src={p.image_url} alt={p.name} className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" />
                                             <div className="absolute top-3 inset-x-3 flex justify-between items-start">
                                                 <div className="flex flex-col gap-1.5">
                                                     {p.discount_percentage > 0 && <div className="bg-red-500 text-white text-[9px] font-black px-2 py-1 rounded-lg">-{p.discount_percentage}%</div>}
@@ -482,45 +485,56 @@ const Home = () => {
                                                 </div>
                                             </div>
                                         </div>
-                                        <div className="px-1">
-                                            <h4 className="text-sm font-semibold text-zinc-900 dark:text-white truncate mb-0.5">{p.name}</h4>
-                                            <div className="flex items-center justify-between mt-2">
-                                                <span className="text-base font-black text-zinc-900 dark:text-white">₹{p.has_variants ? p.starting_price : (p.discount_price || p.price)}</span>
+                                        <div className="px-3 pb-2">
+                                            <h4 className="text-[13px] font-bold text-zinc-900 dark:text-white truncate mb-0.5 uppercase italic tracking-tight">{p.name}</h4>
+                                            <div className="flex items-center justify-between mt-3">
+                                                <span className="text-base font-black text-zinc-900 dark:text-white italic">₹{p.has_variants ? p.starting_price : (p.discount_price || p.price)}</span>
                                                 
                                                 {(() => {
                                                     const itemInCart = cartItems.find(item => item.id == p.id);
                                                     
                                                     if (p.has_variants) {
+                                                        const totalQty = cartItems.filter(item => item.id == p.id).reduce((acc, item) => acc + item.quantity, 0);
                                                         return (
-                                                            <button 
-                                                                onClick={(e) => { 
-                                                                    e.stopPropagation(); 
-                                                                    navigate(`/product/${p.id}`); 
-                                                                }} 
-                                                                className="w-8 h-8 bg-zinc-950 dark:bg-white rounded-full flex items-center justify-center text-white dark:text-zinc-950 shadow-md transform active:scale-90 transition-transform"
-                                                            >
-                                                                <Plus size={16} strokeWidth={2.5}/>
-                                                            </button>
+                                                            <div className="relative">
+                                                                {totalQty > 0 && (
+                                                                    <div className="absolute -top-1 -right-1 w-4 h-4 bg-emerald-500 text-white text-[8px] font-black rounded-full flex items-center justify-center border border-white dark:border-zinc-900 z-10 animate-in zoom-in">
+                                                                        {totalQty}
+                                                                    </div>
+                                                                )}
+                                                                <button 
+                                                                    onClick={(e) => { 
+                                                                        e.stopPropagation(); 
+                                                                        setSelectedProduct(p);
+                                                                        setShowVariantModal(true);
+                                                                    }} 
+                                                                    className="w-8 h-8 bg-zinc-950 dark:bg-white rounded-full flex items-center justify-center text-white dark:text-zinc-950 shadow-md transform active:scale-95 transition-transform"
+                                                                >
+                                                                    <Plus size={16} strokeWidth={2.5}/>
+                                                                </button>
+                                                            </div>
                                                         );
                                                     }
                                                     
                                                     if (itemInCart) {
                                                         return (
-                                                            <div className="flex items-center bg-zinc-100 dark:bg-zinc-800 rounded-full p-1 border border-zinc-200 dark:border-zinc-700" onClick={(e) => e.stopPropagation()}>
+                                                            <div className="flex items-center bg-zinc-100 dark:bg-zinc-800 rounded-full p-1 border border-zinc-200 dark:border-zinc-700">
                                                                 <button 
-                                                                    onClick={() => {
+                                                                    onClick={(e) => {
+                                                                        e.stopPropagation();
                                                                         updateQuantity(itemInCart.cart_item_id, itemInCart.quantity - 1);
                                                                     }}
-                                                                    className="w-6 h-6 rounded-full bg-white dark:bg-zinc-700 text-zinc-900 dark:text-white flex items-center justify-center shadow-sm active:scale-90 transition-transform"
+                                                                    className="w-7 h-7 rounded-full bg-white dark:bg-zinc-700 text-zinc-900 dark:text-white flex items-center justify-center shadow-sm active:scale-90 transition-transform"
                                                                 >
                                                                     <Minus size={12} strokeWidth={2.5} />
                                                                 </button>
-                                                                <span className="text-xs font-black px-2 text-zinc-900 dark:text-white">{itemInCart.quantity}</span>
+                                                                <span className="text-[11px] font-black px-2.5 text-zinc-900 dark:text-white italic">{itemInCart.quantity}</span>
                                                                 <button 
-                                                                    onClick={() => {
+                                                                    onClick={(e) => {
+                                                                        e.stopPropagation();
                                                                         updateQuantity(itemInCart.cart_item_id, itemInCart.quantity + 1);
                                                                     }}
-                                                                    className="w-6 h-6 rounded-full bg-zinc-950 dark:bg-white text-white dark:text-zinc-900 flex items-center justify-center shadow-sm active:scale-90 transition-transform"
+                                                                    className="w-7 h-7 rounded-full bg-zinc-950 dark:bg-white text-white dark:text-zinc-900 flex items-center justify-center shadow-sm active:scale-90 transition-transform"
                                                                 >
                                                                     <Plus size={12} strokeWidth={2.5} />
                                                                 </button>
@@ -534,7 +548,7 @@ const Home = () => {
                                                                 e.stopPropagation(); 
                                                                 addToCart(p); 
                                                             }} 
-                                                            className="w-8 h-8 bg-zinc-950 dark:bg-white rounded-full flex items-center justify-center text-white dark:text-zinc-950 shadow-md transform active:scale-90 transition-transform"
+                                                            className="w-8 h-8 bg-zinc-950 dark:bg-white rounded-full flex items-center justify-center text-white dark:text-zinc-950 shadow-md transform active:scale-95 transition-transform"
                                                         >
                                                             <Plus size={16} strokeWidth={2.5}/>
                                                         </button>
@@ -549,6 +563,62 @@ const Home = () => {
                     </AnimatePresence>
                 </div>
             </div>
+
+            {/* Variant Selection Modal */}
+            <AnimatePresence>
+                {showVariantModal && selectedProduct && (
+                    <div
+                        className="fixed inset-0 z-[9999] flex items-end justify-center bg-black/80 backdrop-blur-sm"
+                        onClick={() => setShowVariantModal(false)}
+                    >
+                        <motion.div
+                            initial={{ y: "100%" }}
+                            animate={{ y: 0 }}
+                            exit={{ y: "100%" }}
+                            transition={{ type: "spring", damping: 25, stiffness: 300 }}
+                            className="bg-white dark:bg-zinc-900 w-full rounded-t-[48px] p-8 pb-12 shadow-2xl relative z-[10000] max-h-[70vh] overflow-y-auto"
+                            onClick={(e) => e.stopPropagation()}
+                        >
+                            <div className="flex justify-between items-start mb-8">
+                                <div>
+                                    <h3 className="text-xl font-black italic tracking-tight uppercase mb-2 text-zinc-900 dark:text-white">{selectedProduct.name}</h3>
+                                    <p className="text-[10px] font-black text-emerald-500 uppercase tracking-[0.3em] italic">Select Option</p>
+                                </div>
+                                <button
+                                    onClick={() => setShowVariantModal(false)}
+                                    className="w-10 h-10 bg-zinc-100 dark:bg-zinc-800 rounded-full flex items-center justify-center text-zinc-400 hover:text-zinc-600 dark:hover:text-zinc-200 transition-colors"
+                                >
+                                    <X size={20} />
+                                </button>
+                            </div>
+
+                            <div className="space-y-3">
+                                {selectedProduct.variants?.map((v, i) => (
+                                    <button
+                                        key={i}
+                                        onClick={() => {
+                                            addToCart(selectedProduct, 1, v);
+                                            setShowVariantModal(false);
+                                        }}
+                                        className="w-full flex items-center justify-between p-6 bg-zinc-50 dark:bg-zinc-800 hover:bg-emerald-500/10 border border-zinc-100 dark:border-zinc-700 hover:border-emerald-500/30 rounded-3xl transition-all group active:scale-[0.98]"
+                                    >
+                                        <div className="flex flex-col items-start gap-1">
+                                            <span className="text-[13px] font-black italic uppercase text-zinc-900 dark:text-white group-hover:text-emerald-500">{v.quantity}</span>
+                                            <span className="text-[10px] font-bold italic text-zinc-400 uppercase tracking-widest group-hover:text-emerald-500/50">Unit / Scale</span>
+                                        </div>
+                                        <div className="flex items-center gap-4">
+                                            <span className="text-lg font-black italic text-zinc-900 dark:text-white">₹{parseFloat(v.price).toFixed(0)}</span>
+                                            <div className="w-8 h-8 rounded-full bg-zinc-200 dark:bg-zinc-700 flex items-center justify-center text-zinc-400 group-hover:bg-emerald-500 group-hover:text-white transition-all">
+                                                <Plus size={16} strokeWidth={4} />
+                                            </div>
+                                        </div>
+                                    </button>
+                                ))}
+                            </div>
+                        </motion.div>
+                    </div>
+                )}
+            </AnimatePresence>
 
             {/* City Modal */}
             <AnimatePresence>
