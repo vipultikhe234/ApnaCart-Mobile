@@ -27,7 +27,7 @@ const ProductDetail = () => {
     const { id } = useParams();
     const navigate = useNavigate();
     const location = useLocation();
-    const { addToCart } = useCart();
+    const { addToCart, cartItems, updateQuantity } = useCart();
     const [product, setProduct] = useState(null);
     const [loading, setLoading] = useState(true);
     const [quantity, setQuantity] = useState(1);
@@ -203,42 +203,54 @@ const ProductDetail = () => {
                             </p>
                         </div>
 
-                        {/* Reviews */}
+                        {/* Reviews / Feedback */}
                         <div className="mb-12">
-                            <div className="flex justify-between items-center mb-6">
-                                <h3 className="text-xs font-black text-zinc-900 dark:text-white uppercase tracking-widest italic">Guest Experience</h3>
-                                <button
-                                    onClick={() => {
-                                        if (!localStorage.getItem('access_token')) return navigate('/login');
-                                        setShowReviewModal(true);
-                                    }}
-                                    className="bg-brand-500/10 text-brand-500 px-4 py-2 rounded-xl text-[10px] font-black uppercase tracking-widest italic border border-brand-500/20"
-                                >
-                                    Share Feedback
-                                </button>
-                            </div>
+                            <div className="flex flex-col gap-6">
+                                <header className="flex justify-between items-end">
+                                    <div>
+                                        <h2 className="text-xl font-black tracking-tighter mb-1 uppercase italic text-zinc-900 dark:text-white">Guest Experience</h2>
+                                        <p className="text-[9px] text-zinc-400 font-black uppercase tracking-[0.3em] italic">Voices from our marketplace</p>
+                                    </div>
+                                    <button
+                                        onClick={() => {
+                                            if (!localStorage.getItem('access_token')) return navigate('/login');
+                                            setShowReviewModal(true);
+                                        }}
+                                        className="bg-brand-500/10 text-brand-500 px-4 py-2 rounded-xl text-[10px] font-black uppercase tracking-widest italic border border-brand-500/20"
+                                    >
+                                        Share Feedback
+                                    </button>
+                                </header>
 
-                            <div className="space-y-4">
-                                {product.reviews?.length > 0 ? (
-                                    product.reviews.map((rev, i) => (
-                                        <div key={i} className="bg-white dark:bg-zinc-900 p-5 rounded-3xl border border-zinc-100 dark:border-zinc-800 shadow-sm">
-                                            <div className="flex items-center gap-3 mb-3">
-                                                <div className="w-8 h-8 rounded-full bg-zinc-100 dark:bg-zinc-800 flex items-center justify-center text-[10px] font-black">{rev.user_name?.[0] || 'U'}</div>
-                                                <div>
-                                                    <p className="text-[11px] font-black text-zinc-900 dark:text-white uppercase italic tracking-tight">{rev.user_name}</p>
-                                                    <div className="flex gap-0.5 mt-0.5">
-                                                        {[...Array(5)].map((_, s) => <Star key={s} size={8} className={s < rev.rating ? 'text-brand-500 fill-brand-500' : 'text-zinc-200'} />)}
+                                <div className="space-y-4">
+                                    {product.reviews?.length > 0 ? (
+                                        product.reviews.map((rev, i) => (
+                                            <div key={i} className="bg-white dark:bg-zinc-900/40 p-5 rounded-[24px] border border-zinc-100 dark:border-zinc-800/50 flex flex-col gap-3 shadow-sm">
+                                                <div className="flex items-center justify-between">
+                                                    <div className="flex items-center gap-3">
+                                                        <div className="w-10 h-10 bg-brand-500/10 rounded-2xl flex items-center justify-center text-brand-500 text-xs font-black italic border border-brand-500/20">
+                                                            {rev.user_name?.[0] || 'U'}
+                                                        </div>
+                                                        <div>
+                                                            <p className="text-sm font-black tracking-tight uppercase italic text-zinc-900 dark:text-white">{rev.user_name}</p>
+                                                            <p className="text-[9px] text-zinc-400 font-black uppercase tracking-widest italic">Verified Guest</p>
+                                                        </div>
+                                                    </div>
+                                                    <div className="flex gap-0.5">
+                                                        {[...Array(5)].map((_, s) => (
+                                                            <Star key={s} size={10} className={s < rev.rating ? 'text-brand-500 fill-brand-500' : 'text-zinc-200 dark:text-zinc-800'} />
+                                                        ))}
                                                     </div>
                                                 </div>
+                                                <p className="text-[11px] text-zinc-500 dark:text-zinc-400 font-bold italic leading-relaxed">"{rev.comment}"</p>
                                             </div>
-                                            <p className="text-[12px] text-zinc-400 font-bold italic leading-relaxed">"{rev.comment}"</p>
+                                        ))
+                                    ) : (
+                                        <div className="py-20 bg-white dark:bg-zinc-900/20 rounded-[32px] text-center border border-zinc-100 dark:border-zinc-800 border-dashed">
+                                            <p className="text-[10px] font-black text-zinc-400 uppercase tracking-widest italic">No feedback shared yet</p>
                                         </div>
-                                    ))
-                                ) : (
-                                    <div className="py-12 bg-white dark:bg-zinc-900 rounded-3xl text-center border border-zinc-100 dark:border-zinc-800 border-dashed">
-                                        <p className="text-[10px] font-black text-zinc-400 uppercase tracking-widest italic">No feedback shared yet</p>
-                                    </div>
-                                )}
+                                    )}
+                                </div>
                             </div>
                         </div>
                     </>
@@ -252,26 +264,63 @@ const ProductDetail = () => {
                         initial={{ y: 200 }}
                         animate={{ y: 0 }}
                         exit={{ y: 200 }}
-                        className="fixed bottom-0 w-full p-6 bg-white/90 dark:bg-[#0A0A0A]/90 backdrop-blur-3xl border-t border-zinc-100/50 dark:border-zinc-800/50 z-50 flex gap-4"
+                        className="fixed bottom-0 w-full p-6 bg-white/95 dark:bg-[#0A0A0A]/95 backdrop-blur-3xl border-t border-zinc-100 dark:border-zinc-800/50 z-50 flex gap-4"
                     >
-                        <div className="flex items-center bg-zinc-50 dark:bg-zinc-900 rounded-2xl p-1.5 border border-zinc-200 dark:border-zinc-800">
-                            <button onClick={() => setQuantity(q => Math.max(1, q - 1))} className="w-10 h-10 bg-white dark:bg-zinc-800 rounded-xl flex items-center justify-center shadow-sm"><Minus size={16} /></button>
-                            <span className="w-10 text-center font-black text-sm italic">{quantity}</span>
-                            <button onClick={() => setQuantity(q => q + 1)} className="w-10 h-10 bg-zinc-900 dark:bg-white text-white dark:text-zinc-900 rounded-xl flex items-center justify-center shadow-sm"><Plus size={16} /></button>
-                        </div>
-                        <button
-                            disabled={isOutOfStock}
-                            onClick={() => {
-                                addToCart(product, quantity, selectedVariant, product.merchant);
-                                navigate('/cart');
-                            }}
-                            className={`flex-1 rounded-2xl shadow-2xl flex items-center justify-between px-6 active:scale-95 transition-all ${
-                                isOutOfStock ? 'bg-zinc-200 dark:bg-zinc-800 text-zinc-400 opacity-50' : 'bg-brand-500 text-zinc-950 font-black'
-                            }`}
-                        >
-                            <span className="text-[11px] uppercase tracking-widest italic">{isOutOfStock ? 'Sold out' : 'Add to cart'}</span>
-                            {!isOutOfStock && <span className="text-xl italic tracking-tighter">₹{(currentPrice * quantity).toFixed(2)}</span>}
-                        </button>
+                        {(() => {
+                            const cartItemId = `${product.id}${selectedVariant ? '-' + selectedVariant.id : ''}`;
+                            const cartItem = cartItems.find(item => item.cart_item_id === cartItemId);
+                            const displayQty = cartItem ? cartItem.quantity : quantity;
+
+                            return (
+                                <>
+                                    <div className="flex items-center bg-zinc-100/50 dark:bg-zinc-900 rounded-2xl p-1.5 border border-zinc-200 dark:border-zinc-800 z-[60]">
+                                        <button 
+                                            onClick={(e) => { 
+                                                e.stopPropagation(); 
+                                                if (cartItem) {
+                                                    updateQuantity(cartItemId, cartItem.quantity - 1);
+                                                } else {
+                                                    setQuantity(prev => Math.max(1, prev - 1));
+                                                }
+                                            }} 
+                                            className="w-10 h-10 bg-white dark:bg-zinc-800 rounded-xl flex items-center justify-center shadow-sm active:scale-90 transition-transform cursor-pointer text-zinc-900 dark:text-white"
+                                        >
+                                            <Minus size={16} strokeWidth={3} />
+                                        </button>
+                                        <span className="w-10 text-center font-black text-sm italic text-zinc-900 dark:text-white">{displayQty}</span>
+                                        <button 
+                                            onClick={(e) => { 
+                                                e.stopPropagation(); 
+                                                if (cartItem) {
+                                                    updateQuantity(cartItemId, cartItem.quantity + 1);
+                                                } else {
+                                                    setQuantity(prev => prev + 1);
+                                                }
+                                            }} 
+                                            className="w-10 h-10 bg-zinc-950 dark:bg-white text-white dark:text-zinc-900 rounded-xl flex items-center justify-center shadow-sm active:scale-90 transition-transform cursor-pointer"
+                                        >
+                                            <Plus size={16} strokeWidth={3} />
+                                        </button>
+                                    </div>
+                                    <button
+                                        disabled={isOutOfStock}
+                                        onClick={() => {
+                                            if (!cartItem) {
+                                                addToCart(product, quantity, selectedVariant, product.merchant);
+                                            } else {
+                                                navigate('/cart');
+                                            }
+                                        }}
+                                        className={`flex-1 rounded-2xl shadow-xl flex items-center justify-between px-6 active:scale-95 transition-all ${
+                                            isOutOfStock ? 'bg-zinc-200 dark:bg-zinc-800 text-zinc-400 opacity-50' : 'bg-brand-500 text-zinc-950 font-black'
+                                        }`}
+                                    >
+                                        <span className="text-[10px] uppercase tracking-widest italic">{isOutOfStock ? 'Sold out' : (cartItem ? 'Checkout Now' : 'Add to cart')}</span>
+                                        <span className="text-lg italic tracking-tighter">₹{(currentPrice * displayQty).toFixed(0)}</span>
+                                    </button>
+                                </>
+                            );
+                        })()}
                     </motion.div>
                 )}
             </AnimatePresence>
@@ -291,24 +340,39 @@ const ProductDetail = () => {
                             animate={{ y: 0 }}
                             exit={{ y: "100%" }}
                             onClick={e => e.stopPropagation()}
-                            className="bg-white dark:bg-[#0A0A0A] w-full rounded-t-[40px] p-8 pb-12 shadow-2xl relative"
+                            className="bg-white dark:bg-[#0A0A0A] w-full rounded-t-[40px] p-8 pb-12 shadow-2xl relative border-t border-white/5"
                         >
                             <div className="w-12 h-1 bg-zinc-200 dark:bg-zinc-800 rounded-full mx-auto mb-8"></div>
-                            <h2 className="text-2xl font-black text-zinc-900 dark:text-white uppercase tracking-tighter italic mb-8">Share Experience</h2>
-                            <div className="flex justify-center gap-3 mb-8">
-                                {[1, 2, 3, 4, 5].map(star => (
-                                    <button key={star} onClick={() => setUserRating(star)}>
-                                        <Star size={36} className={userRating >= star ? 'text-brand-500 fill-brand-500' : 'text-zinc-100 dark:text-zinc-800'} />
-                                    </button>
-                                ))}
+                            
+                            <header className="mb-8">
+                                <h2 className="text-2xl font-black text-zinc-900 dark:text-white uppercase tracking-tighter italic mb-1">Share Experience</h2>
+                                <p className="text-[9px] text-zinc-400 font-black uppercase tracking-[0.3em] italic">Post public feedback</p>
+                            </header>
+
+                            <div className="bg-zinc-50 dark:bg-zinc-900/50 p-6 rounded-[32px] border border-zinc-100 dark:border-zinc-800 mb-8">
+                                <p className="text-[9px] font-black text-zinc-400 uppercase tracking-[0.4em] italic mb-4 text-center">Rate your delight</p>
+                                <div className="flex justify-center gap-3 mb-8">
+                                    {[1, 2, 3, 4, 5].map(star => (
+                                        <button key={star} onClick={() => setUserRating(star)} className="active:scale-90 transition-transform">
+                                            <Star size={32} className={userRating >= star ? 'text-brand-500 fill-brand-500' : 'text-zinc-200 dark:text-zinc-800'} />
+                                        </button>
+                                    ))}
+                                </div>
+                                <textarea
+                                    value={reviewComment}
+                                    onChange={(e) => setReviewComment(e.target.value)}
+                                    placeholder="Your feedback matters..."
+                                    className="w-full p-5 bg-white dark:bg-zinc-950 border border-zinc-100 dark:border-zinc-800 rounded-2xl outline-none min-h-[120px] text-sm italic font-bold text-zinc-900 dark:text-white placeholder:text-zinc-300 dark:placeholder:text-zinc-700"
+                                />
                             </div>
-                            <textarea
-                                value={reviewComment}
-                                onChange={(e) => setReviewComment(e.target.value)}
-                                placeholder="Your feedback matters..."
-                                className="w-full p-5 bg-zinc-50 dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 rounded-3xl outline-none min-h-[120px] text-sm italic font-bold mb-8"
-                            />
-                            <button onClick={handleSubmitReview} className="w-full py-5 bg-brand-500 text-zinc-950 rounded-3xl font-black uppercase tracking-widest italic shadow-xl shadow-brand-500/20">Submit Review</button>
+
+                            <button 
+                                onClick={handleSubmitReview} 
+                                disabled={userRating === 0 || !reviewComment.trim()}
+                                className={`w-full py-5 rounded-[24px] font-black uppercase tracking-widest italic shadow-xl transition-all active:scale-95 ${userRating === 0 || !reviewComment.trim() ? 'bg-zinc-100 dark:bg-zinc-800 text-zinc-400' : 'bg-brand-500 text-zinc-950'}`}
+                            >
+                                Submit Review
+                            </button>
                         </motion.div>
                     </motion.div>
                 )}
