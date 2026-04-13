@@ -165,17 +165,20 @@ const Home = () => {
         ? Merchants.filter(r => r.city_id === selectedCity.id)
         : Merchants;
 
+    // Create a Set of valid merchant IDs for the selected city for O(1) lookup
+    const validMerchantIds = new Set(filteredMerchants.map(m => m.id));
+
     const filteredProductsFull = activeCategory === 'All'
         ? popularProducts 
         : popularProducts.filter(p => p.category?.name === activeCategory);
     
-    // Strict City Filter for Products
+    // Strict City Filter for Products using Merchant IDs
     const filteredProducts = selectedCity 
-        ? filteredProductsFull.filter(p => (p.merchant?.city_id === selectedCity.id || p.city_id === selectedCity.id))
+        ? filteredProductsFull.filter(p => validMerchantIds.has(p.merchant_id))
         : filteredProductsFull;
 
     const curatedFiltered = selectedCity
-        ? curatedProducts.filter(p => (p.merchant?.city_id === selectedCity.id || p.city_id === selectedCity.id))
+        ? curatedProducts.filter(p => validMerchantIds.has(p.merchant_id))
         : curatedProducts;
 
     const fadeUp = {

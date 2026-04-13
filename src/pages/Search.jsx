@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { productService } from '../services/api';
+import { productService, MerchantService } from '../services/api';
 import { motion, AnimatePresence } from 'framer-motion';
 import {
     Search as SearchIcon,
@@ -30,14 +30,22 @@ const Search = () => {
     useEffect(() => {
         const fetchAll = async () => {
             try {
-                // Pass city_id to API if selected
+                // 1. Fetch valid merchant IDs for this city first
+                let validMerchantIds = new Set();
+                if (selectedCity) {
+                    const merchantRes = await MerchantService.getAll({ city_id: selectedCity.id });
+                    const merchantsInCity = merchantRes.data.data || [];
+                    validMerchantIds = new Set(merchantsInCity.map(m => m.id));
+                }
+
+                // 2. Fetch products
                 const params = selectedCity ? { city_id: selectedCity.id } : {};
                 const response = await productService.getAll(params);
+                const allData = response.data.data || [];
                 
-                // Double-check filtering in case API returns all
-                const allData = response.data.data;
+                // 3. Filter products by the valid merchant IDs
                 const cityFilteredData = selectedCity 
-                    ? allData.filter(p => p.merchant?.city_id === selectedCity.id || p.city_id === selectedCity.id)
+                    ? allData.filter(p => validMerchantIds.has(p.merchant_id))
                     : allData;
 
                 setProducts(cityFilteredData);
