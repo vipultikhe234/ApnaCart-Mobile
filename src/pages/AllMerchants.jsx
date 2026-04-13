@@ -102,27 +102,27 @@ const AllMerchants = () => {
 
     return (
         <div className="min-h-screen bg-zinc-50 dark:bg-[#060606] pb-24">
-            {/* Ultra Premium Sticky Header */}
-            <div className="sticky top-0 z-50 bg-[#060606]/95 backdrop-blur-xl px-4 pt-4 pb-0">
-                <div className="flex items-center justify-between mb-4">
+            {/* Ultra-Compact Premium Glass Header */}
+            <div className="sticky top-0 z-[100] px-4 pt-4 pb-2 bg-white/60 dark:bg-[#0A0A0A]/60 backdrop-blur-3xl">
+                <div className="flex items-center justify-between bg-white dark:bg-zinc-900/80 rounded-[28px] p-2 pl-2.5 border border-zinc-200/50 dark:border-zinc-800/50 shadow-xl shadow-black/5 dark:shadow-none">
                     <button
                         onClick={() => navigate('/')}
-                        className="w-11 h-11 bg-zinc-900/50 rounded-2xl flex items-center justify-center border border-zinc-800 active:scale-95 transition-all"
+                        className="w-10 h-10 bg-zinc-950 dark:bg-white rounded-2xl flex items-center justify-center text-white dark:text-zinc-950 active:scale-95 transition-transform shrink-0"
                     >
-                        <ChevronLeft size={20} className="text-zinc-400" />
+                        <ChevronLeft size={20} />
                     </button>
 
-                    <div className="flex-1 text-center relative px-4">
+                    <div className="flex-1 text-center relative px-2">
                         <button
                             onClick={() => setCityMenuOpen(!cityMenuOpen)}
                             className="inline-flex items-center gap-2 group"
                         >
-                            <span className="text-sm font-black uppercase tracking-[0.2em] text-white">
-                                {selectedCityId ? cities.find(c => c.id == selectedCityId)?.name : 'All Cities'}
+                            <span className="text-[12px] font-black uppercase tracking-[0.1em] text-zinc-900 dark:text-white italic">
+                                {selectedCityId ? cities.find(c => c.id == selectedCityId)?.name : 'All Regions'}
                             </span>
-                            <ChevronDown size={14} className={`text-emerald-500 transition-transform duration-300 ${cityMenuOpen ? 'rotate-180' : ''}`} />
+                            <ChevronDown size={12} className={`text-emerald-500 transition-transform duration-300 ${cityMenuOpen ? 'rotate-180' : ''}`} />
                         </button>
-                        <p className="text-[9px] text-zinc-500 font-black uppercase tracking-[0.3em] mt-1">Store Directory</p>
+                        <p className="text-[8px] text-zinc-400 font-bold uppercase tracking-[0.2em] leading-none mt-0.5 italic">Partners</p>
 
                         <AnimatePresence>
                             {cityMenuOpen && (
@@ -136,23 +136,20 @@ const AllMerchants = () => {
                                         initial={{ opacity: 0, y: -10, x: '-50%' }}
                                         animate={{ opacity: 1, y: 0, x: '-50%' }}
                                         exit={{ opacity: 0, y: -10, x: '-50%' }}
-                                        className="absolute top-full left-1/2 mt-2 bg-zinc-900/95 backdrop-blur-2xl border border-zinc-800 rounded-3xl p-1.5 w-[180px] shadow-[0_20px_50px_rgba(0,0,0,0.5)] z-[60]"
+                                        className="absolute top-full left-1/2 mt-3 bg-white dark:bg-zinc-900/95 backdrop-blur-2xl border border-zinc-200 dark:border-zinc-800 rounded-[32px] p-2 w-[200px] shadow-2xl z-[1001]"
                                     >
-                                        {/* Decorative Arrow */}
-                                        <div className="absolute -top-1.5 left-1/2 -translate-x-1/2 w-3 h-3 bg-zinc-900 border-l border-t border-zinc-800 rotate-45" />
-
-                                        <div className="relative z-10 flex flex-col gap-1">
+                                        <div className="flex flex-col gap-1">
                                             <button
                                                 onClick={() => { handleCityChange(''); setCityMenuOpen(false); }}
-                                                className={`w-full text-center px-4 py-3 rounded-[20px] text-[10px] font-black uppercase tracking-widest transition-all ${!selectedCityId ? 'bg-emerald-500 text-white' : 'text-zinc-500 hover:text-white hover:bg-zinc-800'}`}
+                                                className={`w-full text-center px-4 py-3 rounded-[24px] text-[10px] font-black uppercase tracking-widest transition-all ${!selectedCityId ? 'bg-emerald-500 text-white' : 'text-zinc-500 hover:text-white hover:bg-zinc-800'}`}
                                             >
-                                                ALL CITIES
+                                                ALL REGIONS
                                             </button>
                                             {cities.map(c => (
                                                 <button
                                                     key={c.id}
                                                     onClick={() => { handleCityChange(c.id); setCityMenuOpen(false); }}
-                                                    className={`w-full text-center px-4 py-3 rounded-[20px] text-[10px] font-black uppercase tracking-widest transition-all ${selectedCityId == c.id ? 'bg-emerald-500 text-white' : 'text-zinc-500 hover:text-white hover:bg-zinc-800'}`}
+                                                    className={`w-full text-center px-4 py-3 rounded-[24px] text-[10px] font-black uppercase tracking-widest transition-all ${selectedCityId == c.id ? 'bg-emerald-500 text-white' : 'text-zinc-500 hover:text-white hover:bg-zinc-800'}`}
                                                 >
                                                     {c.name}
                                                 </button>
@@ -164,16 +161,19 @@ const AllMerchants = () => {
                         </AnimatePresence>
                     </div>
 
-                    <div className="w-11 h-11 flex items-center justify-center">
-                        {(selectedCityId || selectedCatId) && (
+                    <div className="w-10 h-10 flex items-center justify-center text-zinc-400">
+                        {(selectedCityId || selectedCatId) ? (
                             <button
                                 onClick={() => { handleCityChange(''); handleCatChange(''); }}
-                                className="w-11 h-11 bg-zinc-900/50 rounded-2xl flex items-center justify-center border border-zinc-800 active:rotate-90 transition-all text-zinc-400 hover:text-red-500"
+                                className="w-10 h-10 bg-zinc-100 dark:bg-zinc-800 rounded-2xl flex items-center justify-center text-zinc-900 dark:text-white border border-transparent dark:border-zinc-700/50 active:rotate-90 transition-all font-bold"
                             >
-                                <X size={20} />
+                                <X size={18} />
                             </button>
+                        ) : (
+                             <Activity size={18} strokeWidth={2.5} />
                         )}
                     </div>
+                </div>
                 </div>
 
                 <div className="relative group mb-2">

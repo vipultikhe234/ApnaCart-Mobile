@@ -57,35 +57,37 @@ const Search = () => {
 
     return (
         <div className="bg-zinc-50 dark:bg-[#0A0A0A] min-h-screen pt-12 px-6 pb-32 font-sans">
-            {/* Minimal Search Header */}
-            <div className="flex items-center gap-4 mb-8 sticky top-0 bg-zinc-50/90 dark:bg-[#0A0A0A]/90 backdrop-blur-xl z-50 pt-2 pb-4">
-                <button
-                    onClick={() => navigate(-1)}
-                    className="w-10 h-10 bg-white dark:bg-zinc-900 rounded-full border border-zinc-200 dark:border-zinc-800 flex items-center justify-center text-zinc-900 dark:text-white shrink-0 shadow-sm active:scale-95 transition-transform"
-                >
-                    <ChevronLeft size={20} />
-                </button>
+            {/* Ultra-Compact Premium Glass Header */}
+            <div className="sticky top-0 z-[100] px-4 pt-4 pb-2 bg-white/60 dark:bg-[#0A0A0A]/60 backdrop-blur-3xl">
+                <div className="flex items-center gap-3 bg-white dark:bg-zinc-900/80 rounded-[28px] p-2 pl-3 border border-zinc-200/50 dark:border-zinc-800/50 shadow-xl shadow-black/5 dark:shadow-none">
+                    <button
+                        onClick={() => navigate(-1)}
+                        className="w-10 h-10 bg-zinc-950 dark:bg-white rounded-2xl flex items-center justify-center text-white dark:text-zinc-950 active:scale-95 transition-transform shrink-0"
+                    >
+                        <ChevronLeft size={20} />
+                    </button>
 
-                <div className="flex-1 relative group bg-white dark:bg-zinc-900 rounded-full border border-zinc-200 dark:border-zinc-800 shadow-sm">
-                    <div className="absolute left-4 top-1/2 -translate-y-1/2 text-zinc-400 group-focus-within:text-zinc-900 dark:group-focus-within:text-white transition-colors">
-                        <SearchIcon size={18} />
+                    <div className="flex-1 relative group">
+                        <div className="absolute left-3 top-1/2 -translate-y-1/2 text-zinc-400 group-focus-within:text-emerald-500 transition-colors">
+                            <SearchIcon size={16} />
+                        </div>
+                        <input
+                            type="text"
+                            autoFocus
+                            value={query}
+                            onChange={(e) => setQuery(e.target.value)}
+                            placeholder="Search dishes..."
+                            className="w-full bg-transparent py-2.5 pl-10 pr-10 text-xs font-black text-zinc-900 dark:text-white outline-none placeholder:text-zinc-500 uppercase tracking-widest italic"
+                        />
+                        {query && (
+                            <button
+                                onClick={() => setQuery('')}
+                                className="absolute right-3 top-1/2 -translate-y-1/2 text-zinc-400 hover:text-zinc-900 dark:hover:text-white transition-colors"
+                            >
+                                <X size={14} />
+                            </button>
+                        )}
                     </div>
-                    <input
-                        type="text"
-                        autoFocus
-                        value={query}
-                        onChange={(e) => setQuery(e.target.value)}
-                        placeholder="Search menu..."
-                        className="w-full bg-transparent py-3 pl-11 pr-12 text-sm text-zinc-900 dark:text-white outline-none placeholder:text-zinc-400"
-                    />
-                    {query && (
-                        <button
-                            onClick={() => setQuery('')}
-                            className="absolute right-4 top-1/2 -translate-y-1/2 text-zinc-400 hover:text-zinc-900 dark:hover:text-white transition-colors"
-                        >
-                            <X size={16} />
-                        </button>
-                    )}
                 </div>
             </div>
 
