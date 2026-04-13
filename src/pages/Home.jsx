@@ -469,7 +469,7 @@ const Home = () => {
                         ) : (
                             curatedProducts.slice(0, 10).map((p, idx) => (
                                 <motion.div key={`curated-${p.id}`} layout initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }} exit={{ opacity: 0, scale: 0.95 }} transition={{ delay: idx * 0.05 }}>
-                                    <Link to={`/product/${p.id}`} className="block group">
+                                    <div className="block group cursor-pointer" onClick={() => navigate(`/product/${p.id}`)}>
                                         <div className="aspect-square bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 rounded-3xl overflow-hidden mb-3 relative">
                                             <img src={p.image_url} alt={p.name} className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" />
                                             <div className="absolute top-3 inset-x-3 flex justify-between items-start">
@@ -486,10 +486,63 @@ const Home = () => {
                                             <h4 className="text-sm font-semibold text-zinc-900 dark:text-white truncate mb-0.5">{p.name}</h4>
                                             <div className="flex items-center justify-between mt-2">
                                                 <span className="text-base font-black text-zinc-900 dark:text-white">₹{p.has_variants ? p.starting_price : (p.discount_price || p.price)}</span>
-                                                <button onClick={(e) => { e.preventDefault(); addToCart(p); }} className="w-8 h-8 bg-zinc-950 dark:bg-white rounded-full flex items-center justify-center text-white dark:text-zinc-950 shadow-md transform active:scale-90 transition-transform"><Plus size={16} strokeWidth={2.5}/></button>
+                                                
+                                                {(() => {
+                                                    const itemInCart = cartItems.find(item => item.id == p.id);
+                                                    
+                                                    if (p.has_variants) {
+                                                        return (
+                                                            <button 
+                                                                onClick={(e) => { 
+                                                                    e.stopPropagation(); 
+                                                                    navigate(`/product/${p.id}`); 
+                                                                }} 
+                                                                className="w-8 h-8 bg-zinc-950 dark:bg-white rounded-full flex items-center justify-center text-white dark:text-zinc-950 shadow-md transform active:scale-90 transition-transform"
+                                                            >
+                                                                <Plus size={16} strokeWidth={2.5}/>
+                                                            </button>
+                                                        );
+                                                    }
+                                                    
+                                                    if (itemInCart) {
+                                                        return (
+                                                            <div className="flex items-center bg-zinc-100 dark:bg-zinc-800 rounded-full p-1 border border-zinc-200 dark:border-zinc-700" onClick={(e) => e.stopPropagation()}>
+                                                                <button 
+                                                                    onClick={() => {
+                                                                        updateQuantity(itemInCart.cart_item_id, itemInCart.quantity - 1);
+                                                                    }}
+                                                                    className="w-6 h-6 rounded-full bg-white dark:bg-zinc-700 text-zinc-900 dark:text-white flex items-center justify-center shadow-sm active:scale-90 transition-transform"
+                                                                >
+                                                                    <Minus size={12} strokeWidth={2.5} />
+                                                                </button>
+                                                                <span className="text-xs font-black px-2 text-zinc-900 dark:text-white">{itemInCart.quantity}</span>
+                                                                <button 
+                                                                    onClick={() => {
+                                                                        updateQuantity(itemInCart.cart_item_id, itemInCart.quantity + 1);
+                                                                    }}
+                                                                    className="w-6 h-6 rounded-full bg-zinc-950 dark:bg-white text-white dark:text-zinc-900 flex items-center justify-center shadow-sm active:scale-90 transition-transform"
+                                                                >
+                                                                    <Plus size={12} strokeWidth={2.5} />
+                                                                </button>
+                                                            </div>
+                                                        );
+                                                    }
+
+                                                    return (
+                                                        <button 
+                                                            onClick={(e) => { 
+                                                                e.stopPropagation(); 
+                                                                addToCart(p); 
+                                                            }} 
+                                                            className="w-8 h-8 bg-zinc-950 dark:bg-white rounded-full flex items-center justify-center text-white dark:text-zinc-950 shadow-md transform active:scale-90 transition-transform"
+                                                        >
+                                                            <Plus size={16} strokeWidth={2.5}/>
+                                                        </button>
+                                                    );
+                                                })()}
                                             </div>
                                         </div>
-                                    </Link>
+                                    </div>
                                 </motion.div>
                             ))
                         )}
