@@ -316,12 +316,15 @@ const Sidebar = ({ isOpen, onClose }) => {
                                     <p className="text-[10px] font-black text-zinc-400 uppercase tracking-widest mt-0.5">Premium Experience</p>
                                 </div>
                             </div>
-                            <button
-                                onClick={onClose}
-                                className="w-10 h-10 bg-zinc-50 dark:bg-zinc-900 rounded-full flex items-center justify-center text-zinc-400 border border-zinc-100 dark:border-zinc-800"
-                            >
-                                <X size={20} />
-                            </button>
+                            <div className="flex flex-col items-end gap-1">
+                                <button
+                                    onClick={onClose}
+                                    className="w-10 h-10 bg-zinc-50 dark:bg-zinc-900 rounded-full flex items-center justify-center text-zinc-400 border border-zinc-100 dark:border-zinc-800 active:rotate-180 transition-all"
+                                >
+                                    <X size={20} />
+                                </button>
+                                <span className="text-[7px] font-black text-zinc-400 dark:text-zinc-600 uppercase tracking-widest mr-1">v1.0.8 (Latest Build)</span>
+                            </div>
                         </div>
 
                         {/* Content Area */}
