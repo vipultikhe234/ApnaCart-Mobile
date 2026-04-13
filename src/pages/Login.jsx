@@ -51,8 +51,8 @@ const Login = () => {
         <div className="min-h-screen bg-[#050505] text-white flex flex-col font-sans relative overflow-hidden">
             {/* Ultra-Premium Mesh Gradient Background */}
             <div className="absolute inset-0 z-0">
-                <div className="absolute top-[-20%] left-[-10%] w-[100%] h-[60%] bg-emerald-600/20 blur-[140px] rounded-full animate-pulse" />
-                <div className="absolute bottom-[-20%] right-[-10%] w-[100%] h-[60%] bg-blue-600/10 blur-[140px] rounded-full" />
+                <div className="absolute top-[-20%] left-[-10%] w-[100%] h-[60%] bg-orange-600/10 blur-[140px] rounded-full" />
+                <div className="absolute bottom-[-20%] right-[-10%] w-[100%] h-[60%] bg-blue-600/5 blur-[140px] rounded-full" />
                 <div className="absolute inset-0 bg-[url('https://grainy-gradients.vercel.app/noise.svg')] opacity-[0.03] brightness-100 contrast-150" />
             </div>
 
@@ -73,49 +73,39 @@ const Login = () => {
                     initial={{ opacity: 0, scale: 0.8 }}
                     animate={{ opacity: 1, scale: 1 }}
                     transition={{ duration: 1, ease: [0.16, 1, 0.3, 1] }}
-                    className="mb-12 relative flex justify-center"
+                    className="mb-14 relative flex justify-center"
                 >
-                    {/* Breathing Outer Glow */}
                     <motion.div 
-                        animate={{ 
-                            scale: [1, 1.15, 1],
-                            opacity: [0.3, 0.6, 0.3]
-                        }}
+                        animate={{ scale: [1, 1.1, 1], opacity: [0.2, 0.4, 0.2] }}
                         transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
                         className="absolute inset-0 bg-orange-500/20 blur-3xl rounded-full"
                     />
 
                     <div className="relative">
-                        {/* Layered Glass Border */}
                         <div className="absolute -inset-4 bg-white/5 border border-white/10 rounded-[40px] backdrop-blur-3xl" />
-                        
-                        {/* Official App Icon Body */}
-                        <div className="w-24 h-24 bg-white rounded-[32px] flex items-center justify-center relative z-10 shadow-2xl border border-white/20 p-2 overflow-hidden">
-                            <img src="/app-icon.png" alt="ApnaCart Official Logo" className="w-full h-full object-contain" />
-                            
-                            {/* Decorative Sparkle overlay with matching gradient color */}
+                        <div className="w-24 h-24 bg-white rounded-[32px] flex items-center justify-center relative z-10 shadow-2xl border border-white/20 p-1.5">
+                            <img src="/app-icon.png" alt="Logo" className="w-full h-full object-contain" />
                             <motion.div 
-                                animate={{ rotate: 360 }}
-                                transition={{ duration: 8, repeat: Infinity, ease: "linear" }}
-                                className="absolute -top-3 -right-3 w-10 h-10 bg-white/10 backdrop-blur-md rounded-2xl flex items-center justify-center border border-white/20"
+                                animate={{ rotate: 360, scale: [1, 1.1, 1] }}
+                                transition={{ rotate: { duration: 12, repeat: Infinity, ease: "linear" }, scale: { duration: 3, repeat: Infinity, ease: "easeInOut" } }}
+                                className="absolute -top-4 -right-4 w-11 h-11 bg-white dark:bg-zinc-800 shadow-xl rounded-2xl flex items-center justify-center border border-zinc-100 dark:border-zinc-700 z-20"
                             >
-                                <Sparkles size={16} className="text-[#FF6B3D]" fill="currentColor" />
+                                <Sparkles size={18} className="text-orange-500" fill="currentColor" />
                             </motion.div>
                         </div>
                     </div>
                 </motion.div>
 
+                {/* Centered Branding Section */}
                 <motion.div 
                     initial={{ opacity: 0, y: 20 }}
                     animate={{ opacity: 1, y: 0 }}
-                    transition={{ delay: 0.1 }}
-                    className="mb-10"
+                    className="mb-10 text-center"
                 >
-                    <h1 className="text-5xl font-black tracking-tighter italic uppercase leading-[0.9]">
-                        Apna<br />
-                        <span className="text-orange-500">Cart</span>
+                    <h1 className="text-2xl font-bold text-white tracking-tight">
+                        Apna<span className="text-orange-500">Cart</span>
                     </h1>
-                    <p className="text-[10px] font-black uppercase tracking-[0.5em] text-zinc-500 mt-5 ml-1">
+                    <p className="text-[10px] font-medium text-zinc-500 mt-2 uppercase tracking-widest">
                         Priority Access Portal
                     </p>
                 </motion.div>
@@ -151,7 +141,7 @@ const Login = () => {
                                     type="email"
                                     value={email}
                                     onChange={(e) => setEmail(e.target.value)}
-                                    placeholder="IDENTITY EMAIL"
+                                    placeholder="EMAIL"
                                     className="w-full bg-white/5 border border-white/5 focus:border-orange-500/50 rounded-3xl py-5 pl-16 pr-6 text-sm font-bold tracking-widest uppercase outline-none transition-all placeholder:text-zinc-700"
                                     required
                                 />
@@ -167,7 +157,7 @@ const Login = () => {
                                     type={showPassword ? 'text' : 'password'}
                                     value={password}
                                     onChange={(e) => setPassword(e.target.value)}
-                                    placeholder="SECRET KEY"
+                                    placeholder="PASSWORD"
                                     className="w-full bg-white/5 border border-white/5 focus:border-orange-500/50 rounded-3xl py-5 pl-16 pr-16 text-sm font-bold tracking-widest uppercase outline-none transition-all placeholder:text-zinc-700"
                                     required
                                 />
@@ -182,24 +172,23 @@ const Login = () => {
                         </div>
 
                         <div className="flex justify-end pr-2">
-                             <button type="button" className="text-[10px] font-black uppercase tracking-widest text-zinc-500 hover:text-orange-500 transition-colors">Forgot Access Key?</button>
+                             <button type="button" className="text-[10px] font-black uppercase tracking-widest text-zinc-500 hover:text-orange-500 transition-colors">Forgot Password?</button>
                         </div>
 
                         <button
                             type="submit"
                             disabled={loading}
-                            className={`relative w-full py-6 rounded-[32px] mt-4 overflow-hidden transition-all active:scale-[0.98] ${
+                            className={`relative w-full py-6 rounded-[32px] mt-4 overflow-hidden transition-all active:scale-[0.98] shadow-2xl ${
                                 loading 
                                 ? 'bg-zinc-800 text-zinc-600' 
-                                : 'bg-orange-600 text-white shadow-2xl shadow-orange-600/30 font-black uppercase tracking-[0.2em] italic text-sm'
+                                : 'bg-orange-600 text-white shadow-orange-600/30 font-black uppercase tracking-[0.2em] italic text-sm'
                             }`}
                         >
-                            <div className="absolute inset-0 bg-white/20 opacity-0 hover:opacity-100 transition-opacity" />
                             {loading ? (
                                 <span className="animate-pulse tracking-[0.3em]">Authenticating</span>
                             ) : (
                                 <div className="flex items-center justify-center gap-3">
-                                    <span>Access Account</span>
+                                    <span>Login</span>
                                     <ArrowRight size={20} strokeWidth={3} />
                                 </div>
                             )}
@@ -208,8 +197,8 @@ const Login = () => {
 
                     <div className="flex flex-col items-center gap-6 mt-12">
                         <p className="text-[10px] font-black text-zinc-600 uppercase tracking-widest">
-                            New Explorer?{' '}
-                            <Link to="/register" className="text-orange-500 border-b border-orange-500/30 pb-0.5">Initialize Identity</Link>
+                            New here?{' '}
+                            <Link to="/register" className="text-orange-500 border-b border-orange-500/30 pb-0.5">Create Account</Link>
                         </p>
                         
                         <div className="flex gap-4">
@@ -224,10 +213,9 @@ const Login = () => {
                 </motion.div>
             </div>
 
-            <div className="pb-12 text-center relative z-10">
+            <div className="pb-10 text-center relative z-10">
                  <p className="text-[8px] font-black text-zinc-800 uppercase tracking-[0.4em] leading-relaxed">
-                    Institutional Standard Encryption <br />
-                    Powered by ApnaCart Advanced Intelligence
+                    Powered by ApnaCart © 2026
                  </p>
             </div>
         </div>
