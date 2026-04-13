@@ -91,8 +91,9 @@ const AllMerchants = () => {
     };
 
     const filtered = merchants.filter(r =>
-        r.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        r.address?.toLowerCase().includes(searchTerm.toLowerCase())
+        (r.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        r.address?.toLowerCase().includes(searchTerm.toLowerCase())) &&
+        (!selectedCityId || r.city_id == selectedCityId)
     );
 
     // Category Strip is now always visible for easier navigation

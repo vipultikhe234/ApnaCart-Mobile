@@ -18,25 +18,42 @@ const Search = () => {
     const [products, setProducts] = useState([]);
     const [filteredProducts, setFilteredProducts] = useState([]);
     const [loading, setLoading] = useState(true);
+    const [selectedCity] = useState(() => {
+        try {
+            const saved = localStorage.getItem('selectedCity');
+            return saved ? JSON.parse(saved) : null;
+        } catch (e) {
+            return null;
+        }
+    });
 
     useEffect(() => {
         const fetchAll = async () => {
             try {
-                const response = await productService.getAll();
-                setProducts(response.data.data);
+                // Pass city_id to API if selected
+                const params = selectedCity ? { city_id: selectedCity.id } : {};
+                const response = await productService.getAll(params);
+                
+                // Double-check filtering in case API returns all
+                const allData = response.data.data;
+                const cityFilteredData = selectedCity 
+                    ? allData.filter(p => p.merchant?.city_id === selectedCity.id || p.city_id === selectedCity.id)
+                    : allData;
 
-                const params = new URLSearchParams(window.location.search);
-                const q = params.get('q');
+                setProducts(cityFilteredData);
+
+                const urlParams = new URLSearchParams(window.location.search);
+                const q = urlParams.get('q');
                 if (q) {
                     setQuery(q);
-                    const initialResults = response.data.data.filter(p =>
+                    const initialResults = cityFilteredData.filter(p =>
                         p.name.toLowerCase().includes(q.toLowerCase()) ||
                         p.description?.toLowerCase().includes(q.toLowerCase()) ||
                         p.category?.name?.toLowerCase().includes(q.toLowerCase())
                     );
                     setFilteredProducts(initialResults);
                 } else {
-                    setFilteredProducts(response.data.data);
+                    setFilteredProducts(cityFilteredData);
                 }
             } catch (error) {
                 console.error("Search fetch error:", error);
@@ -45,7 +62,7 @@ const Search = () => {
             }
         };
         fetchAll();
-    }, []);
+    }, [selectedCity]);
 
     useEffect(() => {
         const results = products.filter(p =>

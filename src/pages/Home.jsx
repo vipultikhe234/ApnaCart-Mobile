@@ -165,9 +165,18 @@ const Home = () => {
         ? Merchants.filter(r => r.city_id === selectedCity.id)
         : Merchants;
 
-    const filteredProducts = activeCategory === 'All'
-        ? popularProducts
+    const filteredProductsFull = activeCategory === 'All'
+        ? popularProducts 
         : popularProducts.filter(p => p.category?.name === activeCategory);
+    
+    // Strict City Filter for Products
+    const filteredProducts = selectedCity 
+        ? filteredProductsFull.filter(p => (p.merchant?.city_id === selectedCity.id || p.city_id === selectedCity.id))
+        : filteredProductsFull;
+
+    const curatedFiltered = selectedCity
+        ? curatedProducts.filter(p => (p.merchant?.city_id === selectedCity.id || p.city_id === selectedCity.id))
+        : curatedProducts;
 
     const fadeUp = {
         hidden: { opacity: 0, y: 15 },
@@ -467,10 +476,10 @@ const Home = () => {
                 </div>
                 <div className="grid grid-cols-2 gap-x-4 gap-y-8">
                     <AnimatePresence mode="popLayout">
-                        {loading && curatedProducts.length === 0 ? (
+                        {loading && curatedFiltered.length === 0 ? (
                             Array(4).fill(0).map((_, i) => <ProductCardSkeleton key={i} />)
                         ) : (
-                            curatedProducts.slice(0, 10).map((p, idx) => (
+                            curatedFiltered.slice(0, 10).map((p, idx) => (
                                 <motion.div key={`curated-${p.id}`} layout initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }} exit={{ opacity: 0, scale: 0.95 }} transition={{ delay: idx * 0.05 }}>
                                     <div className="block bg-white dark:bg-zinc-900/60 rounded-[36px] border border-zinc-100 dark:border-zinc-800/50 shadow-sm relative overflow-visible group">
                                         <div className="aspect-square bg-zinc-100 dark:bg-zinc-800 rounded-[32px] overflow-hidden relative m-1.5 mb-0">
