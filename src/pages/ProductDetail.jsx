@@ -42,18 +42,31 @@ const ProductDetail = () => {
         ? (selectedVariant ? selectedVariant.available_stock <= 0 : true)
         : (product?.stock <= 0);
 
+    const [isSubmitting, setIsSubmitting] = useState(false);
+
     const handleSubmitReview = async () => {
+        if (!product || userRating === 0 || !reviewComment.trim()) return;
+        setIsSubmitting(true);
         try {
-            await productService.addReview(id, {
+            // Send both keys to be safe
+            await productService.addReview(product.id, {
                 rating: userRating,
+                review: reviewComment,
                 comment: reviewComment
             });
             setShowReviewModal(false);
-            const response = await productService.getById(id);
+            
+            // Refresh product data to see new review
+            const response = await productService.getById(product.id);
             setProduct(response.data.data);
+            
+            // Reset states
             setReviewComment('');
+            setUserRating(5);
         } catch (error) {
-            console.error("Review error:", error);
+            console.error("Review submission failed:", error);
+        } finally {
+            setIsSubmitting(false);
         }
     };
 
@@ -208,7 +221,7 @@ const ProductDetail = () => {
                             <div className="flex flex-col gap-6">
                                 <header className="flex justify-between items-end">
                                     <div>
-                                        <h2 className="text-xl font-black tracking-tighter mb-1 uppercase italic text-zinc-900 dark:text-white">Guest Experience</h2>
+                                        <h2 className="text-xl font-black tracking-tighter mb-1 uppercase italic text-zinc-900 dark:text-white">Community Feed</h2>
                                         <p className="text-[9px] text-zinc-400 font-black uppercase tracking-[0.3em] italic">Voices from our marketplace</p>
                                     </div>
                                     <button
@@ -229,10 +242,10 @@ const ProductDetail = () => {
                                                 <div className="flex items-center justify-between">
                                                     <div className="flex items-center gap-3">
                                                         <div className="w-10 h-10 bg-brand-500/10 rounded-2xl flex items-center justify-center text-brand-500 text-xs font-black italic border border-brand-500/20">
-                                                            {rev.user_name?.[0] || 'U'}
+                                                            {(rev.user?.name || rev.user_name)?.[0] || 'U'}
                                                         </div>
                                                         <div>
-                                                            <p className="text-sm font-black tracking-tight uppercase italic text-zinc-900 dark:text-white">{rev.user_name}</p>
+                                                            <p className="text-sm font-black tracking-tight uppercase italic text-zinc-900 dark:text-white">{rev.user?.name || rev.user_name}</p>
                                                             <p className="text-[9px] text-zinc-400 font-black uppercase tracking-widest italic">Verified Guest</p>
                                                         </div>
                                                     </div>
@@ -242,7 +255,7 @@ const ProductDetail = () => {
                                                         ))}
                                                     </div>
                                                 </div>
-                                                <p className="text-[11px] text-zinc-500 dark:text-zinc-400 font-bold italic leading-relaxed">"{rev.comment}"</p>
+                                                <p className="text-[11px] text-zinc-500 dark:text-zinc-400 font-bold italic leading-relaxed">"{rev.review || rev.comment}"</p>
                                             </div>
                                         ))
                                     ) : (
@@ -368,10 +381,10 @@ const ProductDetail = () => {
 
                             <button 
                                 onClick={handleSubmitReview} 
-                                disabled={userRating === 0 || !reviewComment.trim()}
-                                className={`w-full py-5 rounded-[24px] font-black uppercase tracking-widest italic shadow-xl transition-all active:scale-95 ${userRating === 0 || !reviewComment.trim() ? 'bg-zinc-100 dark:bg-zinc-800 text-zinc-400' : 'bg-brand-500 text-zinc-950'}`}
+                                disabled={isSubmitting || userRating === 0 || !reviewComment.trim()}
+                                className={`w-full py-5 rounded-[24px] font-black uppercase tracking-widest italic shadow-xl transition-all active:scale-95 ${isSubmitting || userRating === 0 || !reviewComment.trim() ? 'bg-zinc-100 dark:bg-zinc-800 text-zinc-400' : 'bg-brand-500 text-zinc-950'}`}
                             >
-                                Submit Review
+                                {isSubmitting ? 'Uploading...' : 'Submit Review'}
                             </button>
                         </motion.div>
                     </motion.div>
