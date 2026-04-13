@@ -258,8 +258,8 @@ const Home = () => {
                 </div>
             </div>
 
-            <div className="px-6 pt-4 pb-4">
-                <h1 className="text-2xl font-black text-zinc-900 dark:text-white uppercase tracking-tight italic flex items-center gap-2">
+            <div className="px-6 pt-2 pb-2">
+                <h1 className="text-lg font-black text-zinc-800 dark:text-white uppercase tracking-tight italic flex items-center gap-2">
                     {greeting}, <span className="text-emerald-500">{user?.name ? user.name.split(' ')[0] : 'ApnaCart'}</span>
                 </h1>
             </div>
