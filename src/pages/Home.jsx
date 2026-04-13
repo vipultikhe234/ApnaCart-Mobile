@@ -491,48 +491,42 @@ const Home = () => {
                                                 <span className="text-base font-black text-zinc-900 dark:text-white italic">₹{p.has_variants ? p.starting_price : (p.discount_price || p.price)}</span>
                                                 
                                                 {(() => {
-                                                    const itemInCart = cartItems.find(item => item.id == p.id);
+                                                    const productItems = cartItems.filter(item => item.id == p.id);
+                                                    const totalQty = productItems.reduce((acc, item) => acc + item.quantity, 0);
                                                     
-                                                    if (p.has_variants) {
-                                                        const totalQty = cartItems.filter(item => item.id == p.id).reduce((acc, item) => acc + item.quantity, 0);
-                                                        return (
-                                                            <div className="relative">
-                                                                {totalQty > 0 && (
-                                                                    <div className="absolute -top-1 -right-1 w-4 h-4 bg-emerald-500 text-white text-[8px] font-black rounded-full flex items-center justify-center border border-white dark:border-zinc-900 z-10 animate-in zoom-in">
-                                                                        {totalQty}
-                                                                    </div>
-                                                                )}
-                                                                <button 
-                                                                    onClick={(e) => { 
-                                                                        e.stopPropagation(); 
-                                                                        setSelectedProduct(p);
-                                                                        setShowVariantModal(true);
-                                                                    }} 
-                                                                    className="w-8 h-8 bg-zinc-950 dark:bg-white rounded-full flex items-center justify-center text-white dark:text-zinc-950 shadow-md transform active:scale-95 transition-transform"
-                                                                >
-                                                                    <Plus size={16} strokeWidth={2.5}/>
-                                                                </button>
-                                                            </div>
-                                                        );
-                                                    }
-                                                    
-                                                    if (itemInCart) {
+                                                    if (totalQty > 0) {
+                                                        const isSimple = !p.has_variants;
+                                                        const firstItem = productItems[0];
+
                                                         return (
                                                             <div className="flex items-center bg-zinc-100 dark:bg-zinc-800 rounded-full p-1 border border-zinc-200 dark:border-zinc-700">
                                                                 <button 
                                                                     onClick={(e) => {
                                                                         e.stopPropagation();
-                                                                        updateQuantity(itemInCart.cart_item_id, itemInCart.quantity - 1);
+                                                                        if (isSimple || productItems.length === 1) {
+                                                                            updateQuantity(firstItem.cart_item_id, firstItem.quantity - 1);
+                                                                        } else {
+                                                                            setSelectedProduct(p);
+                                                                            setShowVariantModal(true);
+                                                                        }
                                                                     }}
                                                                     className="w-7 h-7 rounded-full bg-white dark:bg-zinc-700 text-zinc-900 dark:text-white flex items-center justify-center shadow-sm active:scale-90 transition-transform"
                                                                 >
                                                                     <Minus size={12} strokeWidth={2.5} />
                                                                 </button>
-                                                                <span className="text-[11px] font-black px-2.5 text-zinc-900 dark:text-white italic">{itemInCart.quantity}</span>
+                                                                <div className="flex flex-col items-center px-2.5 min-w-[32px]">
+                                                                    <span className="text-[11px] font-black text-zinc-900 dark:text-white italic leading-none">{totalQty}</span>
+                                                                    {!isSimple && <span className="text-[6px] font-bold text-emerald-500 uppercase tracking-tighter opacity-70">Opt</span>}
+                                                                </div>
                                                                 <button 
                                                                     onClick={(e) => {
                                                                         e.stopPropagation();
-                                                                        updateQuantity(itemInCart.cart_item_id, itemInCart.quantity + 1);
+                                                                        if (isSimple) {
+                                                                            updateQuantity(firstItem.cart_item_id, firstItem.quantity + 1);
+                                                                        } else {
+                                                                            setSelectedProduct(p);
+                                                                            setShowVariantModal(true);
+                                                                        }
                                                                     }}
                                                                     className="w-7 h-7 rounded-full bg-zinc-950 dark:bg-white text-white dark:text-zinc-900 flex items-center justify-center shadow-sm active:scale-90 transition-transform"
                                                                 >
@@ -546,7 +540,12 @@ const Home = () => {
                                                         <button 
                                                             onClick={(e) => { 
                                                                 e.stopPropagation(); 
-                                                                addToCart(p); 
+                                                                if (p.has_variants) {
+                                                                    setSelectedProduct(p);
+                                                                    setShowVariantModal(true);
+                                                                } else {
+                                                                    addToCart(p); 
+                                                                }
                                                             }} 
                                                             className="w-8 h-8 bg-zinc-950 dark:bg-white rounded-full flex items-center justify-center text-white dark:text-zinc-950 shadow-md transform active:scale-95 transition-transform"
                                                         >
