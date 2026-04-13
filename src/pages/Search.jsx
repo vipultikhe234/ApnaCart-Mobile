@@ -55,10 +55,9 @@ const Search = () => {
         setFilteredProducts(results);
     }, [query, products]);
 
-    return (
-        <div className="bg-zinc-50 dark:bg-[#0A0A0A] min-h-screen pt-12 px-6 pb-32 font-sans">
+        <div className="bg-zinc-50 dark:bg-[#0A0A0A] min-h-screen pb-32 font-sans">
             {/* Ultra-Compact Premium Glass Header */}
-            <div className="sticky top-0 z-[100] px-4 pt-4 pb-2 bg-white/60 dark:bg-[#0A0A0A]/60 backdrop-blur-3xl">
+            <div className="sticky top-0 z-[100] px-4 pt-4 pb-2 bg-zinc-50/60 dark:bg-[#0A0A0A]/60 backdrop-blur-3xl">
                 <div className="flex items-center gap-3 bg-white dark:bg-zinc-900/80 rounded-[28px] p-2 pl-3 border border-zinc-200/50 dark:border-zinc-800/50 shadow-xl shadow-black/5 dark:shadow-none">
                     <button
                         onClick={() => navigate(-1)}
@@ -91,7 +90,7 @@ const Search = () => {
                 </div>
             </div>
 
-            {/* Trending area */}
+            <div className="px-6 mt-8">
             {!query && (
                 <div className="mb-10">
                     <div className="flex items-center gap-2 mb-4">
@@ -188,6 +187,7 @@ const Search = () => {
                     </AnimatePresence>
                 </div>
             )}
+            </div>
         </div>
     );
 };
