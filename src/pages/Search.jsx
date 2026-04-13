@@ -55,6 +55,7 @@ const Search = () => {
         setFilteredProducts(results);
     }, [query, products]);
 
+    return (
         <div className="bg-zinc-50 dark:bg-[#0A0A0A] min-h-screen pb-32 font-sans">
             {/* Ultra-Compact Premium Glass Header */}
             <div className="sticky top-0 z-[100] px-4 pt-4 pb-2 bg-zinc-50/60 dark:bg-[#0A0A0A]/60 backdrop-blur-3xl">
