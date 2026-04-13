@@ -5,7 +5,7 @@ import {
     Bell, CreditCard, MapPin, LayoutGrid, Store, User,
     LogOut, Package, Star, Sparkles, Ticket
 } from 'lucide-react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 import axios from 'axios';
 import { productService, MerchantService, landingService } from '../services/api';
 
@@ -323,7 +323,7 @@ const Sidebar = ({ isOpen, onClose }) => {
                                 >
                                     <X size={20} />
                                 </button>
-                                <span className="text-[7px] font-black text-zinc-400 dark:text-zinc-600 uppercase tracking-widest mr-1">v1.0.8 (Latest Build)</span>
+                                <span className="text-[7px] font-black text-zinc-400 dark:text-zinc-600 uppercase tracking-widest mr-1">v1.0.9 (Latest Build)</span>
                             </div>
                         </div>
 
@@ -344,8 +344,9 @@ const Sidebar = ({ isOpen, onClose }) => {
 
                         {/* Footer User Profile */}
                         <div className="p-6 border-t border-zinc-100 dark:border-zinc-800">
-                            <button 
-                                onClick={() => { navigate('/profile'); onClose(); }}
+                            <Link 
+                                to="/profile"
+                                onClick={onClose}
                                 className="w-full flex items-center justify-between p-4 bg-zinc-50 dark:bg-zinc-900 rounded-[28px] border border-zinc-100 dark:border-zinc-800 active:scale-95 transition-transform"
                             >
                                 <div className="flex items-center gap-3">
@@ -358,7 +359,7 @@ const Sidebar = ({ isOpen, onClose }) => {
                                     </div>
                                 </div>
                                 <ChevronRight size={14} className="text-zinc-400" />
-                            </button>
+                            </Link>
                         </div>
                     </motion.div>
                 </>
