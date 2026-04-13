@@ -472,24 +472,27 @@ const Home = () => {
                         ) : (
                             curatedProducts.slice(0, 10).map((p, idx) => (
                                 <motion.div key={`curated-${p.id}`} layout initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }} exit={{ opacity: 0, scale: 0.95 }} transition={{ delay: idx * 0.05 }}>
-                                    <div className="block group bg-white dark:bg-zinc-900/40 p-2 rounded-[32px] border border-zinc-100 dark:border-zinc-800 shadow-sm relative overflow-hidden">
-                                        <div className="aspect-square bg-white dark:bg-zinc-900 border border-zinc-100 dark:border-zinc-800 rounded-[28px] overflow-hidden mb-3 relative group-hover:shadow-xl transition-all">
-                                            <img src={p.image_url} alt={p.name} className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" />
+                                    <div className="block bg-white dark:bg-zinc-900/60 rounded-[36px] border border-zinc-100 dark:border-zinc-800/50 shadow-sm relative overflow-visible group">
+                                        <div className="aspect-square bg-zinc-100 dark:bg-zinc-800 rounded-[32px] overflow-hidden relative m-1.5 mb-0">
+                                            <img 
+                                                src={p.image_url} 
+                                                alt={p.name} 
+                                                className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" 
+                                            />
                                             <div className="absolute top-3 inset-x-3 flex justify-between items-start">
-                                                <div className="flex flex-col gap-1.5">
-                                                    {p.discount_percentage > 0 && <div className="bg-red-500 text-white text-[9px] font-black px-2 py-1 rounded-lg">-{p.discount_percentage}%</div>}
-                                                </div>
-                                                <div className="bg-white/90 dark:bg-zinc-900/90 px-1.5 py-0.5 rounded-lg flex items-center gap-1">
+                                                {p.discount_percentage > 0 && (
+                                                    <div className="bg-red-500 text-white text-[9px] font-black px-2 py-1 rounded-lg shadow-lg shadow-red-500/20">
+                                                        -{p.discount_percentage}%
+                                                    </div>
+                                                )}
+                                                <div className="bg-white/90 dark:bg-zinc-900/90 px-2 py-1 rounded-lg flex items-center gap-1 backdrop-blur-md shadow-sm">
                                                     <Star size={8} className="text-yellow-500 fill-yellow-500" />
-                                                    <span className="text-[9px] font-bold text-zinc-900 dark:text-white">{p.avg_rating}</span>
+                                                    <span className="text-[9px] font-black text-zinc-900 dark:text-white">{p.avg_rating}</span>
                                                 </div>
                                             </div>
-                                        </div>
-                                        <div className="px-3 pb-2">
-                                            <h4 className="text-[13px] font-bold text-zinc-900 dark:text-white truncate mb-0.5 uppercase italic tracking-tight">{p.name}</h4>
-                                            <div className="flex items-center justify-between mt-3">
-                                                <span className="text-base font-black text-zinc-900 dark:text-white italic">₹{p.has_variants ? p.starting_price : (p.discount_price || p.price)}</span>
-                                                
+
+                                            {/* Floating Action Button / Selector */}
+                                            <div className="absolute inset-x-0 -bottom-3 flex justify-center z-10">
                                                 {(() => {
                                                     const productItems = cartItems.filter(item => item.id == p.id);
                                                     const totalQty = productItems.reduce((acc, item) => acc + item.quantity, 0);
@@ -499,7 +502,11 @@ const Home = () => {
                                                         const firstItem = productItems[0];
 
                                                         return (
-                                                            <div className="flex items-center bg-zinc-100 dark:bg-zinc-800 rounded-full p-1 border border-zinc-200 dark:border-zinc-700">
+                                                            <motion.div 
+                                                                initial={{ scale: 0.8 }} 
+                                                                animate={{ scale: 1 }} 
+                                                                className="flex items-center bg-white dark:bg-zinc-950 rounded-2xl p-1 shadow-2xl border border-zinc-200 dark:border-zinc-800"
+                                                            >
                                                                 <button 
                                                                     onClick={(e) => {
                                                                         e.stopPropagation();
@@ -510,13 +517,13 @@ const Home = () => {
                                                                             setShowVariantModal(true);
                                                                         }
                                                                     }}
-                                                                    className="w-7 h-7 rounded-full bg-white dark:bg-zinc-700 text-zinc-900 dark:text-white flex items-center justify-center shadow-sm active:scale-90 transition-transform"
+                                                                    className="w-8 h-8 rounded-xl bg-zinc-50 dark:bg-zinc-900 text-zinc-900 dark:text-white flex items-center justify-center active:scale-90 transition-all"
                                                                 >
-                                                                    <Minus size={12} strokeWidth={2.5} />
+                                                                    <Minus size={14} strokeWidth={3} />
                                                                 </button>
-                                                                <div className="flex flex-col items-center px-2.5 min-w-[32px]">
-                                                                    <span className="text-[11px] font-black text-zinc-900 dark:text-white italic leading-none">{totalQty}</span>
-                                                                    {!isSimple && <span className="text-[6px] font-bold text-emerald-500 uppercase tracking-tighter opacity-70">Opt</span>}
+                                                                <div className="flex flex-col items-center px-4 min-w-[36px]">
+                                                                    <span className="text-xs font-black text-zinc-900 dark:text-white italic leading-none">{totalQty}</span>
+                                                                    {!isSimple && <span className="text-[7px] font-black text-emerald-500 uppercase tracking-tighter mt-0.5">Custom</span>}
                                                                 </div>
                                                                 <button 
                                                                     onClick={(e) => {
@@ -528,16 +535,17 @@ const Home = () => {
                                                                             setShowVariantModal(true);
                                                                         }
                                                                     }}
-                                                                    className="w-7 h-7 rounded-full bg-zinc-950 dark:bg-white text-white dark:text-zinc-900 flex items-center justify-center shadow-sm active:scale-90 transition-transform"
+                                                                    className="w-8 h-8 rounded-xl bg-zinc-950 dark:bg-white text-white dark:text-zinc-950 flex items-center justify-center active:scale-90 transition-all font-bold"
                                                                 >
-                                                                    <Plus size={12} strokeWidth={2.5} />
+                                                                    <Plus size={14} strokeWidth={3} />
                                                                 </button>
-                                                            </div>
+                                                            </motion.div>
                                                         );
                                                     }
 
                                                     return (
-                                                        <button 
+                                                        <motion.button 
+                                                            whileTap={{ scale: 0.95 }}
                                                             onClick={(e) => { 
                                                                 e.stopPropagation(); 
                                                                 if (p.has_variants) {
@@ -547,12 +555,21 @@ const Home = () => {
                                                                     addToCart(p); 
                                                                 }
                                                             }} 
-                                                            className="w-8 h-8 bg-zinc-950 dark:bg-white rounded-full flex items-center justify-center text-white dark:text-zinc-950 shadow-md transform active:scale-95 transition-transform"
+                                                            className="bg-white dark:bg-zinc-950 text-zinc-900 dark:text-white font-black px-6 py-2.5 rounded-2xl shadow-2xl border border-zinc-200 dark:border-zinc-800 text-[10px] uppercase tracking-wider italic flex items-center gap-2"
                                                         >
-                                                            <Plus size={16} strokeWidth={2.5}/>
-                                                        </button>
+                                                            ADD <Plus size={14} strokeWidth={4} className="text-emerald-500" />
+                                                        </motion.button>
                                                     );
                                                 })()}
+                                            </div>
+                                        </div>
+
+                                        <div className="px-5 pt-6 pb-5">
+                                            <h4 className="text-[13px] font-black text-zinc-900 dark:text-white tracking-tight uppercase italic truncate mb-1">{p.name}</h4>
+                                            <p className="text-[10px] text-zinc-400 font-bold truncate mb-3 italic opacity-60">{p.description || "Fresh & Premium Quality"}</p>
+                                            <div className="flex items-center gap-1.5">
+                                                <span className="text-lg font-black text-zinc-950 dark:text-white italic tracking-tighter">₹{p.has_variants ? p.starting_price : (p.discount_price || p.price)}</span>
+                                                {p.discount_percentage > 0 && <span className="text-[10px] text-zinc-400 line-through font-bold">₹{p.price}</span>}
                                             </div>
                                         </div>
                                     </div>
