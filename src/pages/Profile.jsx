@@ -106,15 +106,24 @@ const Profile = () => {
 
     if (showSettings) {
         return (
-            <div className="bg-zinc-50 dark:bg-[#0A0A0A] min-h-screen pb-32 font-sans">
-                <div className="px-6 pt-12 pb-4 sticky top-0 z-40 bg-zinc-50/90 dark:bg-[#0A0A0A]/90 backdrop-blur-xl flex items-center gap-4 border-b border-zinc-200/50 dark:border-zinc-800/50">
-                    <button
-                        onClick={() => setShowSettings(false)}
-                        className="w-10 h-10 bg-white dark:bg-zinc-900 rounded-full border border-zinc-200 dark:border-zinc-800 flex items-center justify-center text-zinc-900 dark:text-white shadow-sm active:scale-95 transition-transform"
-                    >
-                        <ChevronLeft size={20} />
-                    </button>
-                    <h1 className="text-lg font-semibold text-zinc-900 dark:text-white">Settings</h1>
+            <div className="bg-zinc-50 dark:bg-[#0A0A0A] min-h-screen pb-32">
+                {/* Ultra-Compact Premium Glass Header */}
+                <div className="sticky top-0 z-[100] px-4 pt-4 pb-2 bg-zinc-50/60 dark:bg-[#0A0A0A]/60 backdrop-blur-3xl">
+                    <div className="flex items-center justify-between bg-white dark:bg-zinc-900/80 rounded-[28px] p-2 pl-3 border border-zinc-200/50 dark:border-zinc-800/50 shadow-xl shadow-black/5 dark:shadow-none">
+                        <button
+                            onClick={() => setShowSettings(false)}
+                            className="w-10 h-10 bg-zinc-950 dark:bg-white rounded-2xl flex items-center justify-center text-white dark:text-zinc-950 active:scale-95 transition-transform"
+                        >
+                            <ChevronLeft size={20} />
+                        </button>
+                        <div className="flex-1 text-center px-4">
+                            <h2 className="text-sm font-black text-zinc-900 dark:text-white uppercase tracking-[0.2em] italic leading-none mb-1">Preferences</h2>
+                            <p className="text-[9px] font-black text-emerald-500 uppercase tracking-widest italic leading-none">System Settings</p>
+                        </div>
+                        <div className="w-10 h-10 bg-emerald-500 rounded-2xl flex items-center justify-center text-white shadow-lg shadow-emerald-500/20 active:scale-95 transition-transform">
+                            <Settings size={18} strokeWidth={2.5} />
+                        </div>
+                    </div>
                 </div>
 
                 <div className="px-6 mt-6 space-y-8">
