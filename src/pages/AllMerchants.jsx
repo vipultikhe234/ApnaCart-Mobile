@@ -174,7 +174,6 @@ const AllMerchants = () => {
                         )}
                     </div>
                 </div>
-                </div>
 
                 <div className="relative group mb-2">
                     <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-zinc-500 group-focus-within:text-emerald-500 transition-colors" size={16} />
