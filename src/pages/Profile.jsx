@@ -22,6 +22,7 @@ import {
     Globe,
     FileText,
 } from 'lucide-react';
+import MobileLoader from '../components/MobileLoader';
 
 const Profile = () => {
     const [user, setUser] = useState(null);
