@@ -341,17 +341,21 @@ const Sidebar = ({ isOpen, onClose }) => {
 
                         {/* Footer User Profile */}
                         <div className="p-6 border-t border-zinc-100 dark:border-zinc-800">
-                            <div className="flex items-center justify-between p-4 bg-zinc-50 dark:bg-zinc-900 rounded-[28px] border border-zinc-100 dark:border-zinc-800">
+                            <button 
+                                onClick={() => { navigate('/profile'); onClose(); }}
+                                className="w-full flex items-center justify-between p-4 bg-zinc-50 dark:bg-zinc-900 rounded-[28px] border border-zinc-100 dark:border-zinc-800 active:scale-95 transition-transform"
+                            >
                                 <div className="flex items-center gap-3">
                                     <div className="w-10 h-10 bg-zinc-200 dark:bg-zinc-800 rounded-2xl flex items-center justify-center text-zinc-500 font-bold uppercase overflow-hidden">
                                         {user?.name?.[0] || 'G'}
                                     </div>
-                                    <div>
+                                    <div className="text-left">
                                         <p className="text-sm font-black text-zinc-900 dark:text-white leading-tight">{user?.name || 'Guest'}</p>
                                         <p className="text-[9px] font-black text-emerald-500 uppercase tracking-widest mt-0.5">Gold Member</p>
                                     </div>
                                 </div>
-                            </div>
+                                <ChevronRight size={14} className="text-zinc-400" />
+                            </button>
                         </div>
                     </motion.div>
                 </>

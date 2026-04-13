@@ -193,18 +193,44 @@ const Profile = () => {
     }
 
     return (
-        <div className="bg-zinc-50 dark:bg-[#0A0A0A] min-h-screen pb-32 font-sans">
-            {/* Soft Header */}
-            <div className="relative pt-16 pb-6 flex flex-col items-center justify-center bg-white dark:bg-zinc-900 border-b border-zinc-100 dark:border-zinc-800 shadow-sm">
-                <div className="relative mb-4">
-                    <div className="w-24 h-24 bg-zinc-100 dark:bg-zinc-800 rounded-full border border-zinc-200 dark:border-zinc-700 flex items-center justify-center">
-                        <span className="text-3xl font-bold text-zinc-900 dark:text-white">{user.name[0]}</span>
+        <div className="bg-zinc-50 dark:bg-[#0A0A0A] min-h-screen pb-32">
+            {/* Ultra-Compact Premium Glass Header */}
+            <div className="sticky top-0 z-[100] px-4 pt-4 pb-2 bg-zinc-50/60 dark:bg-[#0A0A0A]/60 backdrop-blur-3xl">
+                <div className="flex items-center justify-between bg-white dark:bg-zinc-900/80 rounded-[28px] p-2 pl-3 border border-zinc-200/50 dark:border-zinc-800/50 shadow-xl shadow-black/5 dark:shadow-none">
+                    <button
+                        onClick={() => navigate(-1)}
+                        className="w-10 h-10 bg-zinc-950 dark:bg-white rounded-2xl flex items-center justify-center text-white dark:text-zinc-950 active:scale-95 transition-transform"
+                    >
+                        <ChevronLeft size={20} />
+                    </button>
+                    <div className="flex-1 text-center px-4">
+                        <h2 className="text-sm font-black text-zinc-900 dark:text-white uppercase tracking-[0.2em] italic leading-none mb-1">Account</h2>
+                        <p className="text-[9px] font-black text-emerald-500 uppercase tracking-widest italic leading-none">{user.name}</p>
+                    </div>
+                    <div className="w-10 h-10 bg-zinc-100 dark:bg-zinc-800 rounded-2xl flex items-center justify-center text-zinc-900 dark:text-white border border-transparent dark:border-zinc-700/50 active:scale-95 transition-transform">
+                        <User size={18} strokeWidth={2.5} />
                     </div>
                 </div>
+            </div>
 
-                <div className="text-center">
-                    <h2 className="text-xl font-bold text-zinc-900 dark:text-white mb-1">{user.name}</h2>
-                    <p className="text-xs text-zinc-500">{user.email}</p>
+            {/* Profile Hero */}
+            <div className="px-6 mt-6">
+                <div className="bg-white dark:bg-zinc-900 rounded-[32px] p-8 flex flex-col items-center justify-center border border-zinc-100 dark:border-zinc-800 shadow-sm relative overflow-hidden group">
+                    <div className="absolute top-0 left-0 w-full h-1.5 bg-gradient-to-r from-emerald-500 to-teal-500" />
+                    
+                    <div className="relative mb-4 group">
+                        <div className="w-24 h-24 bg-zinc-100 dark:bg-zinc-800 rounded-full border-4 border-white dark:border-zinc-950 flex items-center justify-center shadow-xl group-hover:scale-105 transition-transform duration-500">
+                            <span className="text-3xl font-black text-zinc-900 dark:text-white italic">{user.name[0]}</span>
+                        </div>
+                        <div className="absolute -bottom-1 -right-1 w-8 h-8 bg-emerald-500 rounded-full border-4 border-white dark:border-zinc-950 flex items-center justify-center text-white">
+                            <CheckCircle2 size={14} strokeWidth={3} />
+                        </div>
+                    </div>
+                    
+                    <div className="text-center">
+                        <h2 className="text-xl font-black text-zinc-900 dark:text-white uppercase tracking-tight italic mb-1">{user.name}</h2>
+                        <p className="text-[10px] text-zinc-500 uppercase tracking-widest font-black leading-none">{user.email}</p>
+                    </div>
                 </div>
             </div>
 
