@@ -128,6 +128,10 @@ export const MerchantService = {
     getReviews: (id) => cachedGet(`/merchants/${id}/reviews`, 2 * 60 * 1000),
     addReview: (id, data) => {
         bustCache(`/merchants/${id}/reviews`);
+        if (data.product_id) {
+            bustCache(`/products/${data.product_id}`);
+            bustCache('/products'); // Bust global list too
+        }
         return api.post(`/merchants/${id}/reviews`, data);
     },
 };

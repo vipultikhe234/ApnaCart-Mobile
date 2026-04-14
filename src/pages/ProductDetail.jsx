@@ -2,7 +2,7 @@ import MobileLoader from '../components/MobileLoader';
 import Skeleton from '../components/Skeleton';
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate, useLocation } from 'react-router-dom';
-import { productService } from '../services/api';
+import { productService, MerchantService } from '../services/api';
 import { useCart } from '../context/CartContext';
 import { motion, AnimatePresence } from 'framer-motion';
 import {
@@ -48,11 +48,11 @@ const ProductDetail = () => {
         if (!product || userRating === 0 || !reviewComment.trim()) return;
         setIsSubmitting(true);
         try {
-            // Send both keys to be safe
-            await productService.addReview(product.id, {
+            // Use MerchantService to post review with product_id
+            await MerchantService.addReview(product.merchant_id, {
+                product_id: product.id,
                 rating: userRating,
-                review: reviewComment,
-                comment: reviewComment
+                review: reviewComment
             });
             setShowReviewModal(false);
             
