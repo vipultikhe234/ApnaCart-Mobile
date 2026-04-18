@@ -17,7 +17,10 @@ const LiveOffersModule = ({ navigate, onClose, selectedCity }) => {
     useEffect(() => {
         const fetchOffers = async () => {
             try {
-                const res = await landingService.getOffers(selectedCity ? { city_id: selectedCity.id } : {});
+                const res = await landingService.getOffers({
+                    ...(selectedCity ? { city_id: selectedCity.id } : {}),
+                    all: 1
+                });
                 setLiveOffers(res.data || []);
             } catch (e) {
                 console.error(e);
@@ -81,7 +84,7 @@ const LiveOffersModule = ({ navigate, onClose, selectedCity }) => {
                                 <div className="relative z-10">
                                     <div className="flex items-baseline justify-between mb-2">
                                         <span className="text-[9px] font-black text-emerald-500 uppercase tracking-[0.2em]">
-                                            {offer.merchant?.name || 'Partner Shop'}
+                                            {offer.merchant?.name || 'ApnaCart Official'}
                                         </span>
                                         <div className={`p-1 rounded-md bg-white/5 border border-white/10`}>
                                             {offer.type === 'coupon' ? <Ticket size={10} className="text-white" /> : <Tag size={10} className="text-white" />}
