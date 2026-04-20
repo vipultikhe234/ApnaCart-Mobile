@@ -80,10 +80,10 @@ const Orders = () => {
 
             {/* Ultra-Compact Premium Glass Header */}
             <div className="sticky top-0 z-[100] px-4 pt-4 pb-2 bg-zinc-50/60 dark:bg-[#0A0A0A]/60 backdrop-blur-3xl">
-                <div className="flex items-center justify-between bg-white dark:bg-zinc-900/80 rounded-[28px] p-2 pl-3 border border-zinc-200/50 dark:border-zinc-800/50 shadow-xl shadow-black/5 dark:shadow-none">
+                <div className="flex items-center justify-between bg-white dark:bg-zinc-900/80 rounded-none p-2 pl-3 border border-zinc-200/50 dark:border-zinc-800/50 shadow-xl shadow-black/5 dark:shadow-none">
                     <button
                         onClick={() => navigate(-1)}
-                        className="w-10 h-10 bg-zinc-950 dark:bg-white rounded-2xl flex items-center justify-center text-white dark:text-zinc-950 active:scale-95 transition-transform"
+                        className="w-10 h-10 bg-zinc-950 dark:bg-white rounded-none flex items-center justify-center text-white dark:text-zinc-950 active:scale-95 transition-transform"
                     >
                         <ChevronRight size={20} className="rotate-180" />
                     </button>
@@ -91,7 +91,7 @@ const Orders = () => {
                         <h2 className="text-sm font-black text-zinc-900 dark:text-white uppercase tracking-[0.2em] italic leading-none mb-1">Your Orders</h2>
                         <p className="text-[9px] font-black text-emerald-500 uppercase tracking-widest italic leading-none">{orders.length} History</p>
                     </div>
-                    <div className="w-10 h-10 bg-zinc-100 dark:bg-zinc-800 rounded-2xl flex items-center justify-center text-zinc-900 dark:text-white border border-transparent dark:border-zinc-700/50 active:scale-95 transition-transform">
+                    <div className="w-10 h-10 bg-zinc-100 dark:bg-zinc-800 rounded-none flex items-center justify-center text-zinc-900 dark:text-white border border-transparent dark:border-zinc-700/50 active:scale-95 transition-transform">
                         <FileText size={18} strokeWidth={2.5} />
                     </div>
                 </div>
@@ -105,15 +105,15 @@ const Orders = () => {
                         <motion.div
                             initial={{ opacity: 0, scale: 0.95 }}
                             animate={{ opacity: 1, scale: 1 }}
-                            className="text-center py-20 bg-white dark:bg-zinc-900 rounded-3xl border border-zinc-100 dark:border-zinc-800 shadow-sm flex flex-col items-center justify-center px-6"
+                            className="text-center py-20 bg-white dark:bg-zinc-900 rounded-none border border-zinc-100 dark:border-zinc-800 shadow-sm flex flex-col items-center justify-center px-6"
                         >
-                            <div className="w-16 h-16 bg-zinc-50 dark:bg-zinc-800 rounded-full flex items-center justify-center mb-4">
+                            <div className="w-16 h-16 bg-zinc-50 dark:bg-zinc-800 rounded-none flex items-center justify-center mb-4">
                                 <PackageOpen size={24} className="text-zinc-400" />
                             </div>
                             <h3 className="text-lg font-bold text-zinc-900 dark:text-white mb-2">No Orders Yet</h3>
                             <p className="text-sm text-zinc-500 mb-8 max-w-[200px]">You haven't placed any orders yet. Discover our menu!</p>
 
-                            <Link to="/" className="w-full bg-zinc-900 dark:bg-white text-white dark:text-zinc-900 py-3.5 rounded-xl text-sm font-semibold active:scale-95 transition-transform">
+                            <Link to="/" className="w-full bg-zinc-900 dark:bg-white text-white dark:text-zinc-900 py-3.5 rounded-none text-sm font-semibold active:scale-95 transition-transform">
                                 Browse Menu
                             </Link>
                         </motion.div>
@@ -130,14 +130,14 @@ const Orders = () => {
                                     transition={{ delay: index * 0.05 }}
                                 >
                                     <Link to={`/order/${order.id}`} className="block">
-                                        <div className="bg-white dark:bg-zinc-900 p-5 rounded-3xl border border-zinc-100 dark:border-zinc-800 shadow-sm active:scale-[0.98] transition-all">
+                                        <div className="bg-white dark:bg-zinc-900 p-5 rounded-none border border-zinc-100 dark:border-zinc-800 shadow-sm active:scale-[0.98] transition-all">
                                             
                                             <div className="flex justify-between items-start mb-4">
                                                 <div>
                                                     <div className="flex items-center gap-2 mb-1">
                                                         <h3 className="font-bold text-zinc-900 dark:text-white text-base">#{order.order_number || String(order.id).padStart(4, '0')}</h3>
                                                         {order.status !== 'delivered' && order.status !== 'cancelled' && (
-                                                            <div className="w-1.5 h-1.5 rounded-full bg-blue-500 animate-pulse"></div>
+                                                            <div className="w-1.5 h-1.5 rounded-none bg-blue-500 animate-pulse"></div>
                                                         )}
                                                     </div>
                                                     <div className="flex items-center gap-1.5 text-zinc-400">
@@ -147,7 +147,7 @@ const Orders = () => {
                                                         </p>
                                                     </div>
                                                 </div>
-                                                <div className={`${style.bg} ${style.text} ${style.border} border px-3 py-1.5 rounded-lg flex items-center gap-1.5`}>
+                                                <div className={`${style.bg} ${style.text} ${style.border} border px-3 py-1.5 rounded-none flex items-center gap-1.5`}>
                                                     <StatusIcon size={12} />
                                                     <span className="text-[10px] font-semibold uppercase tracking-wider">{order.status}</span>
                                                 </div>
@@ -155,13 +155,13 @@ const Orders = () => {
 
                                             <div className="flex flex-wrap gap-2 mb-5">
                                                 {order.items?.slice(0, 3).map((item, i) => (
-                                                    <div key={i} className="bg-zinc-50 dark:bg-zinc-800 px-3 py-1.5 rounded-lg border border-zinc-100 dark:border-zinc-700 flex items-center gap-1.5">
+                                                    <div key={i} className="bg-zinc-50 dark:bg-zinc-800 px-3 py-1.5 rounded-none border border-zinc-100 dark:border-zinc-700 flex items-center gap-1.5">
                                                         <span className="text-[10px] font-semibold text-zinc-500">{item.quantity}x</span>
                                                         <span className="text-xs font-medium text-zinc-700 dark:text-zinc-300 truncate max-w-[80px]">{item.product?.name}</span>
                                                     </div>
                                                 ))}
                                                 {order.items?.length > 3 && (
-                                                    <div className="bg-zinc-100 dark:bg-zinc-800 text-zinc-500 px-3 py-1.5 rounded-lg text-[10px] font-semibold border border-zinc-200 dark:border-zinc-700">
+                                                    <div className="bg-zinc-100 dark:bg-zinc-800 text-zinc-500 px-3 py-1.5 rounded-none text-[10px] font-semibold border border-zinc-200 dark:border-zinc-700">
                                                         +{order.items.length - 3}
                                                     </div>
                                                 )}
@@ -172,7 +172,7 @@ const Orders = () => {
                                                     <span className="text-[10px] text-zinc-400 uppercase tracking-wider block mb-0.5">Total Amount</span>
                                                     <span className="text-lg font-bold text-zinc-900 dark:text-white leading-none">₹{parseFloat(order.total_price).toFixed(0)}</span>
                                                 </div>
-                                                <div className="w-10 h-10 rounded-full bg-zinc-50 dark:bg-zinc-800 text-zinc-500 flex items-center justify-center border border-zinc-200 dark:border-zinc-700">
+                                                <div className="w-10 h-10 rounded-none bg-zinc-50 dark:bg-zinc-800 text-zinc-500 flex items-center justify-center border border-zinc-200 dark:border-zinc-700">
                                                     <ChevronRight size={18} />
                                                 </div>
                                             </div>
@@ -186,7 +186,7 @@ const Orders = () => {
             </div>
 
             {orders.length > 0 && (
-                <div className="mt-8 bg-zinc-900 dark:bg-white rounded-3xl p-6 text-white dark:text-zinc-900 shadow-sm relative overflow-hidden">
+                <div className="mt-8 bg-zinc-900 dark:bg-white rounded-none p-6 text-white dark:text-zinc-900 shadow-sm relative overflow-hidden">
                     <div className="relative z-10 flex justify-between items-center">
                         <div className="space-y-3">
                             <h4 className="text-sm font-semibold uppercase tracking-wider opacity-90">Account Summary</h4>
@@ -201,7 +201,7 @@ const Orders = () => {
                                 </div>
                             </div>
                         </div>
-                        <div className="w-12 h-12 bg-white/10 dark:bg-black/5 rounded-2xl flex items-center justify-center backdrop-blur-md">
+                        <div className="w-12 h-12 bg-white/10 dark:bg-black/5 rounded-none flex items-center justify-center backdrop-blur-md">
                             <ShoppingBag size={20} className="text-white dark:text-zinc-900" />
                         </div>
                     </div>
