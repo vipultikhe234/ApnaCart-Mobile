@@ -213,6 +213,7 @@ const Checkout = () => {
             const couponData = response.data.coupon; // Get the full coupon object from backend response
 
             applyCoupon({
+                id: couponData.id,
                 code: finalCode,
                 discount: response.data.discount,
                 message: response.data.message,
@@ -265,21 +266,27 @@ const Checkout = () => {
         setLoading(true);
         try {
             const orderData = {
-                merchant_id: cartItems[0]?.merchant_id,
+                merchant_id: cartItems[0]?.merchant_id || cartItems[0]?.shop_id,
                 idempotency_key: window.crypto.randomUUID ? window.crypto.randomUUID() : (Date.now().toString() + Math.random().toString()),
                 address_id: addresses.find(a => a.address_line === address)?.id || null,
                 delivery_address: orderType === 'pickup' ? 'Self Pickup from Store' : address,
                 payment_method: paymentMethod,
                 payment_intent_id: stripeIntentId, // Verification token from Phase 1
                 order_type: orderType,
+                coupon_id: coupon ? coupon.id : null,
                 coupon_code: coupon ? coupon.code : null,
                 coupon_discount: couponDiscount,
                 latitude: userLoc?.lat,
                 longitude: userLoc?.lng,
                 delivery_fee: currentDeliveryFee,
+                delivery_tax: deliveryTax,
                 packing_charge: currentPackagingCharge,
+                packaging_tax: packagingTax,
                 platform_fee: currentPlatformFee,
+                platform_tax: platformTax,
+                items_tax: foodTax,
                 tax_amount: totalMerchantTaxes + foodTax,
+                total_price: total,
                 items: cartItems.map(item => ({
                     product_id: item.id,
                     product_variant_id: item.variant?.id || null, 
@@ -506,52 +513,66 @@ const Checkout = () => {
                 {/* Summary */}
                 <div className="bg-white dark:bg-zinc-900 rounded-3xl p-6 border border-zinc-200 dark:border-zinc-800 shadow-sm space-y-4">
                     <div className="flex justify-between items-center text-sm">
-                        <span className="text-zinc-500 flex items-center gap-2"><ReceiptText size={16} /> Subtotal</span>
-                        <span className="font-semibold text-zinc-900 dark:text-white">₹{(Number(subtotal) || 0).toFixed(2)}</span>
+                        <span className="text-zinc-500 flex items-center gap-2 font-medium uppercase tracking-widest text-[10px]">Item Subtotal</span>
+                        <span className="font-bold text-zinc-900 dark:text-white">₹{(Number(subtotal) || 0).toFixed(2)}</span>
                     </div>
 
-                    {couponDiscount > 0 && (
-                        <div className="flex justify-between items-center text-emerald-500 text-sm">
-                            <span className="flex items-center gap-2"><Ticket size={16} /> Discount</span>
-                            <span className="font-semibold">-₹{couponDiscount.toFixed(2)}</span>
-                        </div>
-                    )}
+                    <div className="flex justify-between items-center text-sm border-b border-zinc-50 dark:border-zinc-800/50 pb-2">
+                        <span className="text-zinc-500 flex items-center gap-2 font-medium uppercase tracking-widest text-[10px]">GST on Items</span>
+                        <span className="font-bold text-zinc-900 dark:text-white">₹{foodTax.toFixed(2)}</span>
+                    </div>
 
-                    <div className="space-y-2 pt-2">
-                        {orderType === 'delivery' && currentDeliveryFee > 0 && (
-                            <div className="flex justify-between items-center text-[13px]">
-                                <span className="text-zinc-500">
-                                    Delivery Fee 
-                                    {chargesSnapshot.delivery_charge_type === 'distance' && distanceKm > 0 && (
-                                        <span className="text-[10px] text-zinc-400 font-bold ml-1 uppercase">({distanceKm} KM)</span>
-                                    )}
-                                </span>
-                                <span className="font-medium text-zinc-900 dark:text-zinc-300">₹{currentDeliveryFee.toFixed(2)}</span>
-                            </div>
-                        )}
+                    <div className="space-y-3 pt-2">
                         {currentPackagingCharge > 0 && (
-                            <div className="flex justify-between items-center text-[13px]">
-                                <span className="text-zinc-500">Packaging Charge</span>
-                                <span className="font-medium text-zinc-900 dark:text-zinc-300">₹{currentPackagingCharge.toFixed(2)}</span>
+                            <div className="flex flex-col gap-1">
+                                <div className="flex justify-between items-center text-[10px] font-medium uppercase tracking-widest text-zinc-500">
+                                    <span>Packaging Charge</span>
+                                    <span>₹{currentPackagingCharge.toFixed(2)}</span>
+                                </div>
+                                <div className="flex justify-between items-center text-[9px] font-medium text-zinc-400">
+                                    <span>Packaging GST</span>
+                                    <span>₹{packagingTax.toFixed(2)}</span>
+                                </div>
                             </div>
                         )}
-                        {currentPlatformFee > 0 && (
-                            <div className="flex justify-between items-center text-[13px]">
-                                <span className="text-zinc-500">Platform Fee</span>
-                                <span className="font-medium text-zinc-900 dark:text-zinc-300">₹{currentPlatformFee.toFixed(2)}</span>
+
+                        {orderType === 'delivery' && currentDeliveryFee > 0 && (
+                            <div className="flex flex-col gap-1">
+                                <div className="flex justify-between items-center text-[10px] font-medium uppercase tracking-widest text-zinc-500">
+                                    <span>Delivery Fee {distanceKm > 0 && `(${distanceKm} KM)`}</span>
+                                    <span>₹{currentDeliveryFee.toFixed(2)}</span>
+                                </div>
+                                <div className="flex justify-between items-center text-[9px] font-medium text-zinc-400">
+                                    <span>Delivery GST</span>
+                                    <span>₹{deliveryTax.toFixed(2)}</span>
+                                </div>
                             </div>
                         )}
-                        <div className="flex justify-between items-center text-[13px]">
-                            <span className="text-zinc-500 flex items-center gap-2"><Wallet size={16} /> Taxes & GST</span>
-                            <span className="font-medium text-zinc-900 dark:text-zinc-300">₹{(totalMerchantTaxes + foodTax).toFixed(2)}</span>
+
+                        {couponDiscount > 0 && (
+                            <div className="flex justify-between items-center text-emerald-500 text-[10px] font-black uppercase tracking-widest">
+                                <span>Coupon Saving</span>
+                                <span>-₹{couponDiscount.toFixed(2)}</span>
+                            </div>
+                        )}
+
+                        <div className="flex flex-col gap-1 pt-2 border-t border-zinc-50 dark:border-zinc-800/50">
+                            <div className="flex justify-between items-center text-[10px] font-black uppercase tracking-widest text-zinc-900 dark:text-white">
+                                <span>Platform Fee</span>
+                                <span>₹{currentPlatformFee.toFixed(2)}</span>
+                            </div>
+                            <div className="flex justify-between items-center text-[9px] font-medium text-zinc-400">
+                                <span>Platform GST</span>
+                                <span>₹{platformTax.toFixed(2)}</span>
+                            </div>
                         </div>
                     </div>
 
                     <div className="h-px bg-zinc-100 dark:bg-zinc-800 my-4"></div>
 
                     <div className="flex justify-between items-center">
-                        <span className="text-sm font-semibold text-zinc-900 dark:text-white">Total to pay</span>
-                        <span className="text-2xl font-bold text-zinc-900 dark:text-white">₹{total.toFixed(2)}</span>
+                        <span className="text-xs font-black uppercase tracking-widest text-zinc-900 dark:text-white">To Pay</span>
+                        <span className="text-3xl font-black text-zinc-900 dark:text-white tracking-tighter">₹{total.toFixed(2)}</span>
                     </div>
                 </div>
             </div>
